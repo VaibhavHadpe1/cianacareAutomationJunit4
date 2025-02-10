@@ -1,20 +1,18 @@
 
 package runner;
 
-import io.cucumber.junit.Cucumber;
-import io.cucumber.junit.CucumberOptions;
-import org.junit.runner.RunWith;
+import org.junit.platform.suite.api.ConfigurationParameter;
+import org.junit.platform.suite.api.IncludeEngines;
+import org.junit.platform.suite.api.SelectClasspathResource;
+import org.junit.platform.suite.api.Suite;
 
-@RunWith(Cucumber.class)
-@CucumberOptions( features = {"src/test/resources/features/ClinicOnboarding.feature"}, ///AppiumAutomation/src/test/resources/Features/Sample.feature
-        plugin = {
-                "pretty",
-                "json:target/cucumber-reports/reports.json",
-                "json:target/cucumber-reports/cucumber.runtime.formatter.JSONFormatter"},
-        monochrome = true,
-        glue = {"steps"},
-        tags = "@run")
+
+@Suite
+@IncludeEngines("cucumber")
+@SelectClasspathResource("features/ClinicOnboarding.feature") // Ensure this path is correct
+@ConfigurationParameter(key = "cucumber.plugin", value = "pretty,json:target/cucumber-reports/Cucumber.json, html:target/cucumber-reports/index.html")
+@ConfigurationParameter(key = "cucumber.glue", value = "steps") // Ensure 'steps' package contains step definitions
+@ConfigurationParameter(key = "cucumber.filter.tags", value = "@run") // Ensure correct tag filtering
 public class Runner {
-
 }
 
