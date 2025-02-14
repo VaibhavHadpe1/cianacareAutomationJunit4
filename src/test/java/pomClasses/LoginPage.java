@@ -75,7 +75,6 @@ public class LoginPage
         logger.info("InValid mobile number entered");
     }
     public void clickOnContinueButton() throws InterruptedException {
-        Utility.handleKeyboard();
         Utility.explicitlyWait(continueButton,driver,10);
         continueButton.click();
         logger.info("Clicked on Continue Button");
@@ -87,7 +86,6 @@ public class LoginPage
             }
         }
         logger.info("OTP entered");
-        Utility.handleKeyboard();
     }
     public void clickOnVerifyOTPButton()
     {

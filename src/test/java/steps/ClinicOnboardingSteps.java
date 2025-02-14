@@ -83,4 +83,22 @@ public class ClinicOnboardingSteps {
     public void the_user_should_be_navigated_to_the_personal_information_screen() {
         personalInformationPage.verifyUserIsPresentOnPersonalInformationScreen();
     }
+
+    @Given("The user is on the Personal Information screen")
+    public void the_user_is_on_the_personal_information_screen() {
+        personalInformationPage.verifyUserIsPresentOnPersonalInformationScreen();
+    }
+
+    @When("The user enters all required details")
+    public void the_user_enters_all_required_details() throws IOException, InterruptedException {
+        personalInformationPage.sendInputToField("First name*","First name",Utility.readDataFromPropertyFile("firstName"));
+        personalInformationPage.sendInputToField("Last name*","Last name",Utility.readDataFromPropertyFile("lastName"));
+        personalInformationPage.sendInputToField("Email address*","Email address",Utility.readDataFromPropertyFile("emailAddress"));
+        personalInformationPage.sendInputToField("Clinic name*","Clinic name",Utility.readDataFromPropertyFile("registrationclinicName"));
+    }
+
+    @Then("The details should be saved successfully")
+    public void the_details_should_be_saved_successfully() {
+
+    }
 }

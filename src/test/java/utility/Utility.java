@@ -37,6 +37,7 @@ public class Utility extends Base
         if(driver.isKeyboardShown())
         {
             driver.hideKeyboard();
+            System.out.println("Keyboard is displayed and closed");
         }
         else {
             System.out.println("Keyboard is not displayed.");

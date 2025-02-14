@@ -1,9 +1,6 @@
 package pomClasses;
 
 import io.appium.java_client.android.AndroidDriver;
-import io.appium.java_client.android.nativekey.AndroidKey;
-import io.appium.java_client.android.nativekey.KeyEvent;
-import io.appium.java_client.android.nativekey.PressesKey;
 import io.appium.java_client.pagefactory.AndroidFindBy;
 import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 import org.openqa.selenium.By;
@@ -46,7 +43,6 @@ public class SignupPage {
         mobileNumberField.click();
         Utility.explicitlyWait(mobileNumberInputField,driver,10);
         mobileNumberInputField.sendKeys(Utility.readDataFromPropertyFile("registrationMobileNumber"));
-        Utility.handleKeyboard();
         logger.info("Entered valid registration number");
     }
     public void enterClinicRegistrationNumber() throws IOException {
@@ -56,7 +52,6 @@ public class SignupPage {
         clinicRegistrationNumberInputField.sendKeys(Utility.readDataFromPropertyFile("clinicRegistrationNumber"));
     }
     public void clickOnContinueButton() throws InterruptedException {
-        Utility.handleKeyboard();
         Utility.explicitlyWait(continueButton,driver,10);
         continueButton.click();
         logger.info("Clicked on Continue Button");
@@ -85,9 +80,6 @@ public class SignupPage {
             }
             else {
                 logger.info("No errors found and all details accepted");
-//                Thread.sleep(1000);  // Small delay for stability
-//                ((PressesKey) driver).pressKey(new KeyEvent().withKey(AndroidKey.BACK));
-//                logger.info("Successfully clicked BACK button.");
             }
         } catch (Exception e) {
         logger.error("Unexpected exception: " + e.getMessage());

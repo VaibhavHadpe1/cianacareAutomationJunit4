@@ -27,10 +27,10 @@ Feature: Clinic Onboarding
     When The user verify the OTP and click on Verify OTP
     Then The user should be navigated to the Personal Information screen
 
-#  Scenario: Verify user can enter all details in the Personal Information screen
-#    Given The user is on the Personal Information screen
-#    When The user enters all required details
-#    Then The details should be saved successfully
+  Scenario: Verify user can enter all details in the Personal Information screen
+    Given The user is on the Personal Information screen
+    When The user enters all required details
+    Then The details should be saved successfully
 #
 #  Scenario: Verify navigation to the Clinic Details screen from the Personal Information screen
 #    Given The user has entered valid personal details
