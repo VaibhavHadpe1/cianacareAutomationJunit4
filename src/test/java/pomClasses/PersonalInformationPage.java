@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import utility.Utility;
 
 import java.time.Duration;
+import java.util.List;
 
 import static steps.Base.driver;
 
@@ -19,11 +20,10 @@ public class PersonalInformationPage {
     {
         PageFactory.initElements(new AppiumFieldDecorator(driver, Duration.ofSeconds(2)),this);
     }
-    public static Logger logger= LoggerFactory.getLogger(SignupPage.class);
+    public static Logger logger= LoggerFactory.getLogger(PersonalInformationPage.class);
     @AndroidFindBy(xpath = "//android.widget.TextView[@text=\"Personal information\"]")private WebElement personalInformationScreenTitle;
-    @AndroidFindBy(xpath = "//android.widget.TextView[@text=\"First name*\"]")private WebElement firstNameTitle;
-    @AndroidFindBy(xpath = "//android.widget.TextView[@text='"+"FirstName"+"']") private WebElement ac;
-
+    @AndroidFindBy(xpath = "//android.widget.TextView[contains(@text=\"is required\")]")private List<WebElement> errorMessagesOnPersonalInformation;
+    @AndroidFindBy(xpath = "//android.widget.TextView[@text=\"Continue\"]")private WebElement continueButton;
 
     public void verifyUserIsPresentOnPersonalInformationScreen()
     {
@@ -45,5 +45,27 @@ public class PersonalInformationPage {
         Utility.explicitlyWait(fieldTitle,driver,10);
         fieldPlaceholder.sendKeys(userInput);
         logger.info("Data entered to input field");
+    }
+    public void verifyAllPersonalInformationIsAccepted()
+    {
+        try {
+            if(!errorMessagesOnPersonalInformation.isEmpty() && errorMessagesOnPersonalInformation.get(0).isDisplayed())
+            {
+                logger.error("Error messages are displayed on personal information screen");
+            }
+            else {
+                logger.info("Personal information details is accepted");
+            }
+        }
+        catch (Exception e)
+        {
+            logger.error("Unexpected exception: " + e.getMessage());
+        }
+    }
+
+    public void clickOnContinue() {
+        Utility.explicitlyWait(continueButton,driver,10);
+        continueButton.click();
+        logger.info("Clicked on Continue button");
     }
 }

@@ -21,8 +21,8 @@ public class Base
                 .setPlatformName("Android")
                 .setAutoGrantPermissions(true)
                 .setNoReset(true)
-                .setAppPackage("com.aciana.docisn")
-                .setAppActivity("com.aciana.docisn.MainActivity");
+                .setAppPackage("com.aciana.docisnplus")
+                .setAppActivity("com.aciana.docisnplus.MainActivity");
         try
         {
             driver = new AndroidDriver(new URL("http://127.0.0.1:4723/"), options);

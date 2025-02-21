@@ -5,6 +5,8 @@ import io.appium.java_client.android.nativekey.AndroidKey;
 import io.appium.java_client.android.nativekey.KeyEvent;
 import io.appium.java_client.android.nativekey.PressesKey;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.PointerInput;
+import org.openqa.selenium.interactions.Sequence;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import steps.Base;
@@ -12,6 +14,7 @@ import steps.Base;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.Duration;
+import java.util.Collections;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
@@ -47,5 +50,26 @@ public class Utility extends Base
     {
         ((PressesKey) driver).pressKey(new KeyEvent().withKey(AndroidKey.BACK));
     }
+
+    public static void swipeDown(AndroidDriver driver) {
+        PointerInput finger = new PointerInput(PointerInput.Kind.TOUCH, "finger");
+        Sequence swipe = new Sequence(finger, 0);
+
+        int screenWidth = driver.manage().window().getSize().width;
+        int screenHeight = driver.manage().window().getSize().height;
+
+        int startX = screenWidth / 2;
+        int startY = (int) (screenHeight * 0.8);  // Start from 80% of the screen height
+        int endY = (int) (screenHeight * 0.2);    // End at 20% of the screen height
+
+        swipe.addAction(finger.createPointerMove(Duration.ZERO, PointerInput.Origin.viewport(), startX, startY));
+        swipe.addAction(finger.createPointerDown(PointerInput.MouseButton.LEFT.asArg()));
+        swipe.addAction(finger.createPointerMove(Duration.ofMillis(700), PointerInput.Origin.viewport(), startX, endY));
+        swipe.addAction(finger.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
+
+        driver.perform(Collections.singletonList(swipe));
+    }
+
+
 
 }

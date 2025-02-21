@@ -45,8 +45,8 @@ public class LoginPage
 
 
 
-    public void opencianacare()
-    {
+    public void opencianacare() throws InterruptedException {
+        Thread.sleep(1000);
         Utility.explicitlyWait(cianacareApplication,driver,10);
         cianacareApplication.click();
         logger.info("Clicked on cianacare application");
@@ -59,7 +59,7 @@ public class LoginPage
         }
         else
         {
-            logger.info("Application not loaded successfully and login screen not displayed");
+            logger.error("Application not loaded successfully and login screen not displayed");
         }
     }
     public void enterValidMobileNumber() throws IOException, InterruptedException {
