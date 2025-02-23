@@ -162,11 +162,11 @@ public class ClinicOnboardingSteps {
         locationInformation.enterAddress();
     }
     @When("Clicks on the submit button")
-    public void clicks_on_the_submit_button() {
+    public void clicks_on_the_submit_button() throws InterruptedException {
         locationInformation.clickOnSubmit();
     }
     @Then("The onboarding process should be completed successfully")
-    public void the_onboarding_process_should_be_completed_successfully() throws InterruptedException {
+    public void the_onboarding_process_should_be_completed_successfully() throws InterruptedException, IOException {
         locationInformation.verifyUserCompletedTheClinicOnboarding();
         userDetailsScreen.verifyUserInformation();
     }

@@ -41,9 +41,9 @@ public class ClinicInformationPage {
             WebElement placeholderForUpload=driver.findElement(By.xpath("//android.widget.TextView[@text='"+uploadPlaceholder+"']"));
             Utility.explicitlyWait(placeholderForUpload,driver,10);
             placeholderForUpload.click();
-            Thread.sleep(3000);
+            Thread.sleep(2000);
             // Select the first available image
-            driver.findElement(By.xpath("//android.widget.FrameLayout[@content-desc=\"Photo taken on Feb 15, 2025, 12:04:11 PM\"]/androidx.cardview.widget.CardView")).click();
+            driver.findElement(By.xpath("(//android.widget.GridView[@resource-id=\"com.google.android.providers.media.module:id/picker_tab_recyclerview\"]//android.widget.ImageView)[1]")).click();
             logger.info("Clicked on upload placeholder and uploaded the image");
         } catch (Exception e) {
             logger.error("Exception Occured "+e.getMessage());

@@ -41,7 +41,7 @@ public class UserDetailsScreen {
 
         try {
             // Verify Name
-            WebElement nameElement = wait.until(ExpectedConditions.presenceOfElementLocated(
+            WebElement fullNameElement = wait.until(ExpectedConditions.presenceOfElementLocated(
                     By.xpath("//android.widget.TextView[@text='" + expectedName + "']")));
 
             // Verify Phone & Email
@@ -59,7 +59,7 @@ public class UserDetailsScreen {
             );
 
             // Check if all elements are displayed
-            return nameElement.isDisplayed() && phoneEmailElement.isDisplayed() &&
+            return fullNameElement.isDisplayed() && phoneEmailElement.isDisplayed() &&
                     emailElement.isDisplayed() && roleElement.isDisplayed();
 
         } catch (Exception e) {
@@ -67,12 +67,10 @@ public class UserDetailsScreen {
             return false;
         }
     }
-    boolean isVerified=verifyUserDetails();
 
-   public void verifyUserInformation()
-   {
+   public void verifyUserInformation() throws IOException {
        Utility.implicitlyWait(driver,10);
-       if(isVerified)
+       if(verifyUserDetails())
        {
            logger.info("User details is matched");
        }

@@ -48,10 +48,10 @@ public class LocationInformation {
         Utility.implicitlyWait(driver,2);
         addressInputField.sendKeys(Utility.readDataFromPropertyFile("addressOfTheClinic"));
     }
-    public void clickOnSubmit()
-    {
+    public void clickOnSubmit() throws InterruptedException {
         Utility.swipeDown(driver);
-        Utility.explicitlyWait(submitButton,driver,10);
+        //Utility.explicitlyWait(submitButton,driver,10);
+        Thread.sleep(1000);
         submitButton.click();
         logger.info("Scrolled up to Submit button and Clicked on Submit");
     }
