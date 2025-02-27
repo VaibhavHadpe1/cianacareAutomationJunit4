@@ -43,7 +43,7 @@ public class ClinicInformationPage {
             placeholderForUpload.click();
             Thread.sleep(2000);
             // Select the first available image
-            driver.findElement(By.xpath("(//android.widget.GridView[@resource-id=\"com.google.android.providers.media.module:id/picker_tab_recyclerview\"]//android.widget.ImageView)[1]")).click();
+            driver.findElement(By.xpath("(//androidx.cardview.widget.CardView)[1]")).click();
             logger.info("Clicked on upload placeholder and uploaded the image");
         } catch (Exception e) {
             logger.error("Exception Occured "+e.getMessage());

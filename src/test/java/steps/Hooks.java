@@ -23,6 +23,7 @@ public class Hooks extends Base{
 //        loginPage.clickOnContinueButton();
 //        loginPage.enterOTP();
 //        loginPage.clickOnVerifyOTPButton();
+//        loginPage.selectClinic();
     }
     @AfterAll
     public static void tearDown() throws InterruptedException {

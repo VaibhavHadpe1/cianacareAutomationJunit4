@@ -66,7 +66,7 @@ public class LoginPage
         Utility.explicitlyWait(mobileNumberField,driver,10);
         mobileNumberField.click();
         Utility.explicitlyWait(mobileNumberInputField,driver,10);
-        mobileNumberInputField.sendKeys(Utility.readDataFromPropertyFile("validMobileNumber"));
+        mobileNumberInputField.sendKeys(Utility.readDataFromPropertyFile("loginNumberOfAdmin"));
         logger.info("Valid mobile number entered");
     }
     public void enterInValidMobileNumber() throws IOException {
@@ -97,7 +97,7 @@ public class LoginPage
         List<WebElement>clinicDetails=driver.findElements(By.xpath("//android.view.ViewGroup[contains(@content-desc, 'home_prof_pic_id')]//android.widget.TextView"));
         for(WebElement clinic:clinicDetails)
         {
-            if(clinic.getText().contains(Utility.readDataFromPropertyFile("clinicName")))
+            if(clinic.getText().contains(Utility.readDataFromPropertyFile("AdmincClinicName")))
             {
                 System.out.println("Matching clinic found: " + clinic.getText());
                 clinic.click();

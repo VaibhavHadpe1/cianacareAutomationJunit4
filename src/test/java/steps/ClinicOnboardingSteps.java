@@ -1,6 +1,7 @@
 package steps;
 
 import io.appium.java_client.android.AndroidDriver;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -98,10 +99,10 @@ public class ClinicOnboardingSteps {
 
     @When("The user enters all required details")
     public void the_user_enters_all_required_details() throws IOException, InterruptedException {
-        personalInformationPage.sendInputToField("First name*","First name",Utility.readDataFromPropertyFile("firstName"));
-        personalInformationPage.sendInputToField("Last name*","Last name",Utility.readDataFromPropertyFile("lastName"));
-        personalInformationPage.sendInputToField("Email address*","Email address",Utility.readDataFromPropertyFile("emailAddress"));
-        personalInformationPage.sendInputToField("Clinic name*","Clinic name",Utility.readDataFromPropertyFile("registrationclinicName"));
+        personalInformationPage.sendInputToField("First name*",Utility.readDataFromPropertyFile("firstName"));
+        personalInformationPage.sendInputToField("Last name*",Utility.readDataFromPropertyFile("lastName"));
+        personalInformationPage.sendInputToField("Email address*",Utility.readDataFromPropertyFile("emailAddress"));
+        personalInformationPage.sendInputToField("Clinic name*",Utility.readDataFromPropertyFile("registrationclinicName"));
     }
 
     @Then("The details should be accepted successfully")
@@ -132,7 +133,7 @@ public class ClinicOnboardingSteps {
     public void the_user_enters_all_required_clinic_details() throws InterruptedException, IOException {
         clinicInformationPage.uploadDocument("Upload clinic logo");
         clinicInformationPage.selectOptions(Collections.singletonList("Private Sector"));
-        personalInformationPage.sendInputToField("Name of central/state council*","Name of central/state council",Utility.readDataFromPropertyFile("name_of_central/state_council"));
+        personalInformationPage.sendInputToField("Name of central/state council*",Utility.readDataFromPropertyFile("name_of_central/state_council"));
         clinicInformationPage.selectOptions(Collections.singletonList("Multi speciality"));
         clinicInformationPage.selectOptions(Arrays.asList("In patient","Out patient","Laboratory"));
         Utility.swipeDown(driver);
@@ -176,4 +177,6 @@ public class ClinicOnboardingSteps {
         userDetailsScreen.logoutFromUserDetailsScreen();
         loginPage.verifyLoginScreenLoaded();
     }
+
+
 }

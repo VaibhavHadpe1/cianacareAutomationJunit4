@@ -36,12 +36,13 @@ public class PersonalInformationPage {
             logger.error("User is not present on Personal Information screen");
         }
     }
-    public void sendInputToField(String title,String placeholder,String userInput) throws InterruptedException {
+    public void sendInputToField(String title,String userInput) throws InterruptedException {
+        Thread.sleep(1000);
         WebElement fieldTitle=driver.findElement(By.xpath("//android.widget.TextView[@text='"+title+"']"));
         Utility.explicitlyWait(fieldTitle,driver,10);
         fieldTitle.click();
         Thread.sleep(1000);
-        WebElement fieldPlaceholder=driver.findElement(By.xpath("//android.widget.EditText[@text='"+placeholder+"']"));
+        WebElement fieldPlaceholder=driver.findElement(By.xpath("//android.view.ViewGroup[android.widget.TextView[@text='"+title+"']]//android.widget.EditText"));
         Utility.explicitlyWait(fieldTitle,driver,10);
         fieldPlaceholder.sendKeys(userInput);
         logger.info("Data entered to input field");
