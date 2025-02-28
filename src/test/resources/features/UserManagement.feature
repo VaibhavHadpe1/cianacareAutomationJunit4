@@ -12,11 +12,11 @@ Feature: User Management
 
   @TC2
   Scenario: Verify user can add a doctor through users
-#    Given The user is on the users list screen
-#    When The user clicks on Add button and selects Doctor
+    Given The user is on the users list screen
+    When The user clicks on Add button and selects Doctor
     And The user enters required doctor details and submits the form
-#    Then The doctor should be added successfully
-#    And The newly added doctor should be visible in the users list
+    Then The doctor should be added successfully
+    And The newly added doctor should be visible in the users list
 
   @TC3
   Scenario: Verify user can add staff through users
@@ -54,8 +54,7 @@ Feature: User Management
   @TC8
   Scenario: Verify edit option is not displayed for the logged-in user
     Given The user is on the users list screen
-    When The user views their own profile
-    Then The edit option should not be available
+    Then The edit option for logged in user should not be available from user list
 
   @TC9
   Scenario: Verify user can edit doctor privileges
@@ -86,14 +85,14 @@ Feature: User Management
 
   @TC13
   Scenario: Verify user can delete an admin when multiple admins are available
-    Given There are multiple admins in the clinic
+    Given There are multiple admins in the clinic and displayed on UserList
     When The user selects an admin and clicks Delete
     And Confirms the deletion
     Then The admin should be removed from the users list
 
   @TC14
   Scenario: Verify admin cannot delete the only admin for the clinic
-    Given There is only one admin in the clinic
+    Given There is only one admin in the clinic and displayed on UserList
     When The user attempts to delete the admin
     Then The system should display an error message At least one admin is required
 

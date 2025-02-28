@@ -37,12 +37,12 @@ public class UserManagementSteps {
     }
     @Then("The logged-in admin should be displayed in the users list by default")
     public void the_logged_in_admin_should_be_displayed_in_the_users_list_by_default() throws IOException, InterruptedException {
-        userListPage.verifyLoggedInAdminIsDisplayed(Utility.readDataFromPropertyFile("loggedInAdminName"));
+        userListPage.verifyAdminIsDisplayed(Utility.readDataFromPropertyFile("loggedInAdminName"));
 
     }
     @Then("No other users should be shown if no additional admins, doctors, or staff are available")
     public void no_other_users_should_be_shown_if_no_additional_admins_doctors_or_staff_are_available() {
-        userListPage.verifyOnlyOneAdminIsPresentOnusersScreen();
+        userListPage.verifyOnlyOneAdminIsPresentOnUsersScreen();
 
     }
 
@@ -58,163 +58,220 @@ public class UserManagementSteps {
     }
     @When("The user enters required doctor details and submits the form")
     public void the_user_enters_required_doctor_details_and_submits_the_form() throws IOException, InterruptedException {
-//        personalInformationPage.sendInputToField("Mobile number*",Utility.readDataFromPropertyFile("doctorRegistrationMobileNumber"));
-//        personalInformationPage.sendInputToField("First name*",Utility.readDataFromPropertyFile("doctorFirstName"));
-//        personalInformationPage.sendInputToField("Last name*",Utility.readDataFromPropertyFile("doctorLastName"));
-//        clinicInformationPage.selectOptions(Collections.singletonList("Male"));
-//        userListPage.selectDOBOnPersonalInformationScreen();
-//        personalInformationPage.sendInputToField("Email*",Utility.readDataFromPropertyFile("doctorEmail"));
-//        Utility.swipeDown(driver);
-//        clinicInformationPage.uploadDocument("Upload id proof");
-//        userListPage.selectLanguagesKnown(Arrays.asList("Telugu","Hindi","English"));
-//        userListPage.clickOnBackButtonToCloseDropdown();
-//        userListPage.clickOnNext();
-//
-//          userListPage.verifyUserIsOnEducationScreenAndClickOnAddQualification();
-//          userListPage.enterQualificationAndSave();
-//
-//          userListPage.verifyUserIspresentOnMedicalRegistrationScreen();
-//          userListPage.enterMedicalRegistrationAndNavigatesToNext();
+        personalInformationPage.sendInputToField("First name*",Utility.readDataFromPropertyFile("doctorFirstName"));
+        personalInformationPage.sendInputToField("Last name*",Utility.readDataFromPropertyFile("doctorLastName"));
+        clinicInformationPage.selectOptions(Collections.singletonList("Male"));
+        userListPage.selectDOBOnPersonalInformationScreen();
+        personalInformationPage.sendInputToField("Email*",Utility.readDataFromPropertyFile("doctorEmail"));
+        Utility.swipeDown(driver);
+        clinicInformationPage.uploadDocument("Upload id proof");
+        userListPage.selectLanguagesKnown(Arrays.asList("Telugu","Hindi","English"));
+        userListPage.clickOnBackButtonToCloseDropdown();
+        userListPage.clickOnNext();
 
-//          userListPage.verifyUserIsPresentOnMedicalSpecialityScreen();
-//          userListPage.enterMedicalSpecialityAndNavigatesToNext();
+          userListPage.verifyUserIsOnEducationScreenAndClickOnAddQualification();
+          userListPage.enterQualificationAndSave();
 
-//          userListPage.verifyUserIsPresentOnAddressScreen();
-//          userListPage.enterAddressAndNavigatesToNext();
+          userListPage.verifyUserIspresentOnMedicalRegistrationScreen();
+          userListPage.enterMedicalRegistrationAndNavigatesToNext();
+          personalInformationPage.sendInputToField("Mobile number*",Utility.readDataFromPropertyFile("doctorRegistrationMobileNumber"));
+
+          userListPage.verifyUserIsPresentOnMedicalSpecialityScreen();
+          userListPage.enterMedicalSpecialityAndNavigatesToNext();
+
+          userListPage.verifyUserIsPresentOnAddressScreen();
+          userListPage.enterAddressAndNavigatesToNext();
 
           userListPage.verifyUserIsPresentOnPrivilegesScreen();
           userListPage.verifyDoctorPrivileges();
+          userListPage.clickOnNext();
+
+          userListPage.verifyUserIsPresentOnSignatureScreen();
+          userListPage.uploadSignature();
+
+          userListPage.verifyUserIsPresentOnClinicScreen();
+          userListPage.enterClinicFeesAndSubmit();
 
 
     }
     @Then("The doctor should be added successfully")
     public void the_doctor_should_be_added_successfully() {
+        userListPage.verifyUserIsPresentOnUsersListScreen();
 
     }
     @Then("The newly added doctor should be visible in the users list")
-    public void the_newly_added_doctor_should_be_visible_in_the_users_list() {
+    public void the_newly_added_doctor_should_be_visible_in_the_users_list() throws IOException, InterruptedException {
+        userListPage.verifyDoctorIsDisplayed(Utility.readDataFromPropertyFile("doctorFullName"));
 
     }
 
     @When("The user clicks on Add button and selects Staff")
-    public void the_user_clicks_on_add_button_and_selects_staff() {
+    public void the_user_clicks_on_add_button_and_selects_staff() throws InterruptedException {
+        userListPage.clickOnAddButtonUsersListScreen();
+        Thread.sleep(1000);
+        userListPage.selectStaffFromUsersListScreen();
 
     }
     @When("The user enters required staff details and submits the form")
-    public void the_user_enters_required_staff_details_and_submits_the_form() {
+    public void the_user_enters_required_staff_details_and_submits_the_form() throws IOException, InterruptedException {
+        personalInformationPage.sendInputToField("Mobile number*",Utility.readDataFromPropertyFile("staffRegistrationMobileNumber"));
+        personalInformationPage.sendInputToField("First name*",Utility.readDataFromPropertyFile("staffFirstName"));
+        personalInformationPage.sendInputToField("Last name*",Utility.readDataFromPropertyFile("staffLastName"));
+        clinicInformationPage.selectOptions(Collections.singletonList("Female"));
+        personalInformationPage.sendInputToField("Email*",Utility.readDataFromPropertyFile("staffEmail"));
+        userListPage.clickOnNext();
+        userListPage.verifyStaffPrivileges();
+        userListPage.clickOnSubmit();
+
 
     }
     @Then("The staff should be added successfully")
     public void the_staff_should_be_added_successfully() {
+        userListPage.verifyUserIsPresentOnUsersListScreen();
 
     }
     @Then("The newly added staff should be visible in the users list")
-    public void the_newly_added_staff_should_be_visible_in_the_users_list() {
-
+    public void the_newly_added_staff_should_be_visible_in_the_users_list() throws IOException, InterruptedException {
+        userListPage.verifyStaffIsDisplayed(Utility.readDataFromPropertyFile("staffFullName"));
     }
 
     @When("The user enters required admin details and submits the form")
-    public void the_user_enters_required_admin_details_and_submits_the_form() {
-
+    public void the_user_enters_required_admin_details_and_submits_the_form() throws IOException, InterruptedException {
+        personalInformationPage.sendInputToField("Mobile number*",Utility.readDataFromPropertyFile("adminRegistrationMobileNumber"));
+        personalInformationPage.sendInputToField("First name*",Utility.readDataFromPropertyFile("adminFirstName"));
+        personalInformationPage.sendInputToField("Last name*",Utility.readDataFromPropertyFile("adminLastName"));
+        clinicInformationPage.selectOptions(Collections.singletonList("Female"));
+        personalInformationPage.sendInputToField("Email*",Utility.readDataFromPropertyFile("adminEmail"));
+        userListPage.enableAddAdminToggleButton();
+        userListPage.clickOnNext();
+        userListPage.clickOnSubmit();
     }
     @Then("The admin should be added successfully")
     public void the_admin_should_be_added_successfully() {
+        userListPage.verifyUserIsPresentOnUsersListScreen();
 
     }
     @Then("The newly added admin should be visible in the users list")
-    public void the_newly_added_admin_should_be_visible_in_the_users_list() {
-
+    public void the_newly_added_admin_should_be_visible_in_the_users_list() throws IOException, InterruptedException {
+        userListPage.verifyAdminIsDisplayed(Utility.readDataFromPropertyFile("adminFullName"));
     }
     @Then("The list of added users should be displayed")
     public void the_list_of_added_users_should_be_displayed() {
+        userListPage.allUserListOnUsersListScreen();
 
     }
     @When("The user enters a name in the search bar")
     public void the_user_enters_a_name_in_the_search_bar() {
+        userListPage.search("searchAvailableUser");
 
     }
     @Then("The matching users should be displayed in the results")
-    public void the_matching_users_should_be_displayed_in_the_results() {
+    public void the_matching_users_should_be_displayed_in_the_results() throws InterruptedException, IOException {
+        userListPage.observeUserDisplayed(Utility.readDataFromPropertyFile("searchAvailableUser"));
 
     }
 
     @When("The user searches for a non-existing user")
-    public void the_user_searches_for_a_non_existing_user() {
+    public void the_user_searches_for_a_non_existing_user() throws IOException {
+        userListPage.search(Utility.readDataFromPropertyFile("searchNonAvailableUser"));
 
     }
     @Then("The message No users found should be displayed")
-    public void the_message_no_users_found_should_be_displayed() {
+    public void the_message_no_users_found_should_be_displayed() throws IOException, InterruptedException {
+        userListPage.observeUserDisplayed(Utility.readDataFromPropertyFile("searchNonAvailableUser"));
+
 
     }
-    @When("The user views their own profile")
-    public void the_user_views_their_own_profile() {
-
-    }
-    @Then("The edit option should not be available")
-    public void the_edit_option_should_not_be_available() {
-
+    @Then("The edit option for logged in user should not be available from user list")
+    public void the_edit_option_for_logged_in_user_should_not_be_available_from_user_list() throws IOException {
+        userListPage.verifyLoggedInUserNotEditSelfProfileFromUserList(Utility.readDataFromPropertyFile("loginNumberOfAdmin"));
     }
     @When("The user selects a doctor and clicks on Edit Privileges")
     public void the_user_selects_a_doctor_and_clicks_on_edit_privileges() {
-
+        userListPage.selectUserAndClickToEdit("Amit Sivan");
     }
     @And("The user modifies the doctor privileges and saves the changes")
-    public void the_user_modifies_the_doctor_privileges_and_saves_the_changes() {
-
+    public void the_user_modifies_the_doctor_privileges_and_saves_the_changes() throws InterruptedException {
+        userListPage.listOfUsersPrivileges();
+        userListPage.enablePrivilege("Appointment management");
+        userListPage.disablePrivilege("Subscriptions");
+        userListPage.clickOnSave();
     }
     @Then("The updated doctor privileges should be saved successfully")
-    public void the_updated_doctor_privileges_should_be_saved_successfully() {
-
+    public void the_updated_doctor_privileges_should_be_saved_successfully() throws InterruptedException {
+        userListPage.verifyExpectedEnabledPrivilegesAreDisplayed("Appointment management");
+        userListPage.listOfUsersPrivileges();
+        userListPage.clickOnBackButtonToCloseDropdown();
     }
     @When("The user selects a staff member and clicks on Edit Privileges")
     public void the_user_selects_a_staff_member_and_clicks_on_edit_privileges() {
+        userListPage.selectUserAndClickToEdit("Riya Ch");
 
     }
     @When("The user modifies the staff privileges and saves the changes")
-    public void the_user_modifies_the_staff_privileges_and_saves_the_changes() {
-
+    public void the_user_modifies_the_staff_privileges_and_saves_the_changes() throws InterruptedException {
+        userListPage.listOfUsersPrivileges();
+        userListPage.enablePrivilege("Subscriptions");
+        userListPage.enablePrivilege("Schedules");
+        userListPage.clickOnSave();
+        userListPage.listOfUsersPrivileges();
     }
     @Then("The updated staff privileges should be saved successfully")
-    public void the_updated_staff_privileges_should_be_saved_successfully() {
+    public void the_updated_staff_privileges_should_be_saved_successfully() throws InterruptedException {
+        userListPage.verifyExpectedEnabledPrivilegesAreDisplayed("Subscriptions");
+        userListPage.verifyExpectedEnabledPrivilegesAreDisplayed("Schedules");
+        userListPage.listOfUsersPrivileges();
+        userListPage.clickOnBackButtonToCloseDropdown();
 
     }
 
     @When("The user selects an admin and clicks on Edit Privileges")
-    public void the_user_selects_an_admin_and_clicks_on_edit_privileges() {
-
+    public void the_user_selects_an_admin_and_clicks_on_edit_privileges() throws InterruptedException {
+        userListPage.selectUserAndClickToEdit("Nikita");
+        userListPage.listOfUsersPrivileges();
+        userListPage.clickOnEditPrivilegesButton();
     }
     @When("The user cannot modifies the privileges of admin")
-    public void the_user_cannot_modifies_the_privileges_of_admin() {
-
+    public void the_user_cannot_modifies_the_privileges_of_admin() throws InterruptedException {
+        userListPage.verifyAdminUsersPrivilegesNonEditable();
+        userListPage.clickOnSave();
+        userListPage.listOfUsersPrivileges();
+        userListPage.clickOnBackButtonToCloseDropdown();
     }
     @When("The user selects a Doctor or Staff and clicks Delete")
-    public void the_user_selects_a_doctor_or_staff_and_clicks_delete() {
+    public void the_user_selects_a_doctor_or_staff_and_clicks_delete() throws IOException {
+        userListPage.selectUserAndClickOnDelete(Utility.readDataFromPropertyFile("toBeDeletedUserName"));
 
     }
     @When("Confirms the deletion")
     public void confirms_the_deletion() {
+        userListPage.confirmDelete();
 
     }
     @Then("The selected user should be removed from the users list")
-    public void the_selected_user_should_be_removed_from_the_users_list() {
+    public void the_selected_user_should_be_removed_from_the_users_list() throws InterruptedException, IOException {
+        userListPage.observeDeletedUserNotDisplayed(Utility.readDataFromPropertyFile("toBeDeletedUserName"));
 
     }
 
-    @Given("There are multiple admins in the clinic")
-    public void there_are_multiple_admins_in_the_clinic() {
+    @Given("There are multiple admins in the clinic and displayed on UserList")
+    public void there_are_multiple_admins_in_the_clinic_And_Displayed_On_UserList() {
+        userListPage.verifyUserIsPresentOnUsersListScreen();
+        userListPage.multipleAdminIsAvailable();
 
     }
     @When("The user selects an admin and clicks Delete")
-    public void the_user_selects_an_admin_and_clicks_delete() {
+    public void the_user_selects_an_admin_and_clicks_delete() throws IOException {
+        userListPage.selectUserAndClickOnDelete(Utility.readDataFromPropertyFile("adminToBeDeleted"));
 
     }
     @Then("The admin should be removed from the users list")
-    public void the_admin_should_be_removed_from_the_users_list() {
-
+    public void the_admin_should_be_removed_from_the_users_list() throws IOException, InterruptedException {
+        userListPage.observeDeletedUserNotDisplayed(Utility.readDataFromPropertyFile(Utility.readDataFromPropertyFile("adminToBeDeleted")));
     }
 
-    @Given("There is only one admin in the clinic")
-    public void there_is_only_one_admin_in_the_clinic() {
+    @Given("There is only one admin in the clinic and displayed on UserList")
+    public void there_is_only_one_admin_in_the_clinic_And_Displayed_On_UserList() {
 
     }
     @When("The user attempts to delete the admin")

@@ -8,6 +8,7 @@ import io.appium.java_client.pagefactory.AndroidFindBy;
 import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 import io.appium.java_client.touch.WaitOptions;
 import io.appium.java_client.touch.offset.PointOption;
+import jdk.jshell.execution.Util;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.PointerInput;
@@ -15,9 +16,11 @@ import org.openqa.selenium.interactions.Sequence;
 import org.openqa.selenium.support.PageFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testng.Assert;
 import utility.Utility;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -38,8 +41,9 @@ public class UserListPage {
     @AndroidFindBy(xpath = "//android.widget.Button[@resource-id=\"fab\"]") private WebElement addButtonOnUsersListScreen;
     @AndroidFindBy(xpath = "(//android.widget.ScrollView)//android.view.ViewGroup[contains(@content-desc, 'Admin')]") private List<WebElement> adminListOnUsersListScreen;
     @AndroidFindBy(xpath = "(//android.widget.ScrollView)//android.view.ViewGroup[contains(@content-desc, 'Doctor')]") private List<WebElement> doctorListOnUserListScreen;
+    @AndroidFindBy(xpath = "(//android.widget.ScrollView)//android.view.ViewGroup[contains(@content-desc, 'Staff')]") private List<WebElement> staffListOnUserListScreen;
     @AndroidFindBy(xpath = "//android.widget.TextView[@text=\"Doctor\"]")private WebElement doctorOptionOnUsersList;
-    @AndroidFindBy(xpath = "//android.widget.TextView[@text=\"Staff\"]")private WebElement staffOptionOnUsersList;
+    @AndroidFindBy(xpath = "//android.widget.Button[@content-desc=\"Staff\"]")private WebElement staffOptionOnUsersList;
     @AndroidFindBy(xpath = "//android.widget.TextView[@text='Date of birth *']/following-sibling::android.view.ViewGroup[@content-desc]\n") private WebElement dobFieldOnPersonalInformation;
     @AndroidFindBy(xpath = "//android.widget.Button[@text='OK']") private WebElement okButtonOnDatePicker;
     @AndroidFindBy(xpath = "//android.widget.Button[@text='CANCEL']") private WebElement cancelButtonOnDatePicker;
@@ -65,7 +69,17 @@ public class UserListPage {
     @AndroidFindBy(xpath = "(//android.widget.TextView[@text=\"State *\"]/following-sibling::android.view.ViewGroup[@content-desc])[1]")private WebElement stateDropdownOnAddressScreen;
     @AndroidFindBy(xpath = "(//android.widget.TextView[@text=\"State *\"]/following-sibling::android.view.ViewGroup[@content-desc])[2]")private WebElement cityDropdownOnAddressScreen;
     @AndroidFindBy(xpath = "//android.widget.TextView[@text='Privilege']")private WebElement privilegeScreenTitle;
-
+    @AndroidFindBy(xpath = "//android.widget.TextView[@text='Signature']")private WebElement signatureScreenTitle;
+    @AndroidFindBy(xpath = "//android.view.ViewGroup[@content-desc=\"Upload signature\"]") private WebElement uploadSignatureRadioBUtton;
+    @AndroidFindBy(xpath = "//android.widget.TextView[@text='Clinic']")private WebElement clinicFeesScreenTitle;
+    @AndroidFindBy(xpath = "//android.widget.TextView[@text=\"Would you like to take online consultation ? \"]/following-sibling::android.widget.Switch")private WebElement onlineConsultationToggleButton;
+    @AndroidFindBy(xpath = "//android.widget.Button[@content-desc=\"Submit\"]")private WebElement submitButton;
+    @AndroidFindBy(xpath = "//android.widget.TextView[@text=\"Are you adding a admin ? \"]/following-sibling::android.widget.Switch") private WebElement addingAdminToggleButton;
+    @AndroidFindBy(xpath = "//android.widget.EditText[@resource-id=\"searchInput\"]")private WebElement searchInputField;
+    @AndroidFindBy(xpath = "//android.widget.TextView[@text=\"Privileges\"]/following-sibling::android.view.ViewGroup//android.widget.ImageView") private WebElement editPrivilegesButton;
+    @AndroidFindBy(xpath = "//android.view.ViewGroup//android.widget.TextView[@text=\"Privileges\"]/following-sibling::android.view.ViewGroup//android.widget.TextView")private List<WebElement> privilegesListOfUsers;
+    @AndroidFindBy(xpath = "//android.widget.TextView[@text=\"You have the access to all privileges\"]")private WebElement allPrivilegesAccessMessage;
+    @AndroidFindBy(xpath = "//android.widget.Button[@content-desc=\"OK\"]")private WebElement okButtonForConfirmation;
 
 
 
@@ -97,7 +111,7 @@ public class UserListPage {
             logger.error("Unexpected exception: " + e.getMessage());
         }
     }
-    public void verifyLoggedInAdminIsDisplayed(String expectedNameOfAdmin) throws InterruptedException {
+    public void verifyAdminIsDisplayed(String expectedNameOfAdmin) throws InterruptedException {
         Thread.sleep(1000);
         boolean isAdminFound=false;
         try{
@@ -124,7 +138,7 @@ public class UserListPage {
             logger.error("Unexpected Exception: "+e.getMessage());
         }
     }
-    public void verifyOnlyOneAdminIsPresentOnusersScreen(){
+    public void verifyOnlyOneAdminIsPresentOnUsersScreen(){
         if(adminListOnUsersListScreen.size()==1){
             logger.info("Only one admin is present");
         }
@@ -147,7 +161,7 @@ public class UserListPage {
     public void selectStaffFromUsersListScreen() {
         Utility.explicitlyWait(staffOptionOnUsersList,driver,5);
         staffOptionOnUsersList.click();
-        logger.info("User selected the staff option to add doctor");
+        logger.info("User selected the staff option to add staff");
     }
     public void selectDOBOnPersonalInformationScreen() throws InterruptedException {
         Utility.explicitlyWait(dobFieldOnPersonalInformation,driver,10);
@@ -461,7 +475,7 @@ public class UserListPage {
                         + expectedPrivilege + "']/following-sibling::android.widget.Switch"));
 
                 privilegeToggleButton.click(); // Toggle the switch
-                Thread.sleep(2000); // Wait for state change (better to use explicit wait)
+                Thread.sleep(1000); // Wait for state change (better to use explicit wait)
 
                 // Step 3: Verify if the state changed successfully
                 boolean newState = isEnabledPrivilege(expectedPrivilege);
@@ -495,6 +509,345 @@ public class UserListPage {
     public void verifyDoctorPrivileges(){
         verifyPrivilegeToggle("Appointment management",true,false);
         verifyPrivilegeToggle("Packages",false,false);
+
+    }
+    public void verifyStaffPrivileges(){
+        verifyPrivilegeToggle("Appointment management",false,true);
+
+    }
+    public void verifyUserIsPresentOnSignatureScreen()
+    {
+        Utility.explicitlyWait(signatureScreenTitle,driver,10);
+        if(signatureScreenTitle.isDisplayed())
+        {
+            logger.info("User is present on Signature screen");
+        }
+        else {
+            logger.error("User is not present on Signature screen");
+        }
+    }
+    public void uploadSignature() throws InterruptedException {
+        Utility.explicitlyWait(uploadSignatureRadioBUtton,driver,10);
+        uploadSignatureRadioBUtton.click();
+        clinicInformationPage.uploadDocument("Upload image");
+        clickOnNext();
+    }
+    public void verifyUserIsPresentOnClinicScreen() {
+        Utility.explicitlyWait(clinicFeesScreenTitle,driver,10);
+        if(clinicFeesScreenTitle.isDisplayed())
+        {
+            logger.info("User is present on Clinic screen");
+        }
+        else {
+            logger.error("User is not present on Clinic screen");
+        }
+    }
+    public void clickOnSubmit()
+    {
+        Utility.explicitlyWait(submitButton,driver,5);
+        submitButton.click();
+        logger.info("Clicked on Submit");
+    }
+    public void enterClinicFeesAndSubmit() throws InterruptedException {
+        personalInformationPage.sendInputToField("Clinic consultation fee*","600");
+        personalInformationPage.sendInputToField("Online consultation fee*","500");
+        Utility.explicitlyWait(onlineConsultationToggleButton,driver,2);
+        onlineConsultationToggleButton.click();
+        clickOnSubmit();
+    }
+    public void verifyDoctorIsDisplayed(String expectedNameOfDoctor) throws InterruptedException {
+        Thread.sleep(1000);
+        boolean isDoctorFound=false;
+        try{
+            for(int i=0;i<doctorListOnUserListScreen.size();i++){
+                List<WebElement> adminDetails=doctorListOnUserListScreen.get(i).findElements(By.xpath(".//android.widget.TextView"));
+                StringBuilder doctorInfo = new StringBuilder("Doctor " + (i+1) + ": ");
+                for(WebElement detail:adminDetails)
+                {
+                    doctorInfo.append(detail.getText()).append(" | ");
+                }
+                if(doctorInfo.toString().contains(expectedNameOfDoctor))
+                {
+                    logger.info("Expected Doctor Found: "+doctorInfo);
+                    isDoctorFound=true;
+                    break;
+                }
+            }
+            if (!isDoctorFound) {
+                logger.warn("No matching doctor found with name: " + expectedNameOfDoctor);
+            }
+        }
+        catch (Exception e)
+        {
+            logger.error("Unexpected Exception: "+e.getMessage());
+        }
+    }
+    public void verifyStaffIsDisplayed(String expectedNameOfStaff) throws InterruptedException {
+        Thread.sleep(1000);
+        boolean isStaffFound=false;
+        try{
+            for(int i=0;i<staffListOnUserListScreen.size();i++){
+                List<WebElement> adminDetails=staffListOnUserListScreen.get(i).findElements(By.xpath(".//android.widget.TextView"));
+                StringBuilder staffInfo = new StringBuilder("Staff " + (i+1) + ": ");
+                for(WebElement detail:adminDetails)
+                {
+                    staffInfo.append(detail.getText()).append(" | ");
+                }
+                if(staffInfo.toString().contains(expectedNameOfStaff))
+                {
+                    logger.info("Expected Staff Found: "+staffInfo);
+                    isStaffFound=true;
+                    break;
+                }
+            }
+            if (!isStaffFound) {
+                logger.warn("No matching staff found with name: " + expectedNameOfStaff);
+            }
+        }
+        catch (Exception e)
+        {
+            logger.error("Unexpected Exception: "+e.getMessage());
+        }
+    }
+    public boolean isAddAdminToggleButton(){
+        try {
+            String addAdminToggle=addingAdminToggleButton.getText().trim().toLowerCase();
+            if(addAdminToggle.equals("on")){
+                logger.info("Are you adding a admin toggle button is enabled");
+                return true;
+            }
+            else {
+                logger.info("Are you adding a admin toggle button is disabled");
+                return false;
+            }
+        } catch (Exception e) {
+            logger.error("Unexpected exception: "+e.getMessage());
+            return false;
+        }
+    }
+    public void enableAddAdminToggleButton()
+    {
+        Utility.swipeDown(driver);
+        if(isAddAdminToggleButton()){
+            logger.info("Are you adding a admin toggle button is already enabled");
+        }
+        else{
+            Utility.explicitlyWait(addingAdminToggleButton,driver,5);
+            addingAdminToggleButton.click();
+            logger.info("Are you adding a admin toggle button is enabled now");
+        }
+    }
+    public void disableAddAdminToggleButton(){
+        Utility.swipeDown(driver);
+        if(isAddAdminToggleButton()){
+            Utility.explicitlyWait(addingAdminToggleButton,driver,5);
+            addingAdminToggleButton.click();
+            logger.info("Are you adding a admin toggle button is disabled now");
+        }
+        else {
+            logger.info("Are you adding a admin toggle button is already disabled");
+        }
+    }
+    public void allUserListOnUsersListScreen(){
+        List<WebElement> userCards = driver.findElements(By.xpath("//android.view.ViewGroup[contains(@content-desc, ', ')]"));
+        for (int i = 0; i < userCards.size(); i++) {
+            WebElement userCard = userCards.get(i);
+
+            // Extract content description
+            String contentDesc = userCard.getAttribute("contentDescription");
+
+            // Split the content description into Name, Role, and Mobile Number
+            String[] userDetails = contentDesc.split(", ");
+
+            // Ensure extracted details are valid
+            String profilePicture = userDetails.length > 0 ? userDetails[0] : "Unknown profilePicture";
+            String Name = userDetails.length > 1 ? userDetails[1] : "Unknown name";
+            String Role = userDetails.length > 2 ? userDetails[2] : "Unknown role";
+            String MobileNumber=  userDetails.length > 3 ? userDetails[3] :  "Unknown mobileNumber ";
+
+            logger.info("User " + (i + 1) + ":");
+            logger.info("   Name: " + Name);
+            logger.info("   Role: " + Role);
+            logger.info("   Mobile Number: " + MobileNumber);
+            logger.info("------------------------------");
+        }
+    }
+
+    public void search(String searchText) {
+        Utility.explicitlyWait(searchInputField,driver,10);
+        searchInputField.sendKeys(searchText);
+    }
+    public void observeUserDisplayed(String expectedUserName) throws InterruptedException {
+        Thread.sleep(1000);
+        List<WebElement> userCards = driver.findElements(By.xpath("//android.view.ViewGroup[contains(@content-desc, ', ')]"));
+        if (userCards.isEmpty()) {
+            WebElement defaultMessage = driver.findElement(By.xpath("//android.widget.TextView[@text=\"No Users Found\"]"));
+            if (defaultMessage.isDisplayed()) {
+                logger.info("Default message is displayed: No users found.");
+            } else {
+                logger.warn("No users found, but the default message is missing.");
+            }
+            return; // Exit the function since no users are available
+        }
+
+        // Iterate through user cards to check if expected user is present
+        boolean userFound = false;
+        for (WebElement userCard : userCards) {
+            String contentDesc = userCard.getAttribute("contentDescription");
+            String[] userDetails = contentDesc.split(", ");
+            String Name = userDetails.length > 1 ? userDetails[1] : "Unknown name";
+
+            // Check if extracted name matches the expected user name
+            if (Name.contains(expectedUserName)) {
+                logger.info("Searched results are displayed properly: " + expectedUserName);
+                userFound = true;
+                break; // Exit loop once found
+            }
+        }
+        if (!userFound) {
+            logger.warn("Searched user '" + expectedUserName + "' is not found in the displayed results.");
+            Assert.fail("Searched user '" + expectedUserName + "' is not found in the displayed results.");
+        }
+    }
+
+    public void verifyLoggedInUserNotEditSelfProfileFromUserList(String loggedInUserMobileNumber) {
+        try{
+            WebElement userCard=driver.findElement(By.xpath("//android.view.ViewGroup[contains(@content-desc,'"+loggedInUserMobileNumber+"')]"));
+            Utility.explicitlyWait(userCard,driver,10);
+            userCard.click();
+            List<WebElement> userListScreenElements = driver.findElements(By.xpath("//android.view.ViewGroup[contains(@content-desc, ', ')]"));
+            if (!userListScreenElements.isEmpty()) {
+                logger.info("User remained on the same screen, confirming no edit access.");
+                Assert.assertTrue(true, "User did not navigate to another screen.");
+
+            } else {
+                logger.error("User was redirected, which is incorrect.");
+                Assert.fail("User was redirected to edit screen");
+            }
+
+        }catch (Exception e) {
+            logger.error("Exception occurred: " + e.getMessage());
+        }
+    }
+    public void clickOnEditPrivilegesButton()
+    {
+        Utility.explicitlyWait(editPrivilegesButton,driver,10);
+        editPrivilegesButton.click();
+        logger.info("Clicked on edit privileges button");
+    }
+    public void selectUserAndClickToEdit(String expectedUserName)
+    {
+        WebElement userCard=driver.findElement(By.xpath("//android.view.ViewGroup[contains(@content-desc,'"+expectedUserName+"')]"));
+        Utility.explicitlyWait(userCard,driver,10);
+        userCard.click();
+        clickOnEditPrivilegesButton();
+        logger.info("Selected user: "+expectedUserName+" clicked on edit");
+    }
+    public void listOfUsersPrivileges() throws InterruptedException {
+        Thread.sleep(1000);
+        List<String> privileges = new ArrayList<>();
+        for(WebElement element:privilegesListOfUsers)
+        {
+            privileges.add(element.getText());
+        }
+        logger.info("List of Privileges of the user: "+privileges);
+    }
+    public void verifyExpectedEnabledPrivilegesAreDisplayed(String expectedOrEnabledPrivileges) throws InterruptedException {
+        Thread.sleep(1000);
+        List<String> privileges = new ArrayList<>();
+        for(WebElement element:privilegesListOfUsers)
+        {
+            privileges.add(element.getText());
+        }
+        if(privileges.contains(expectedOrEnabledPrivileges)){
+            logger.info("Enabled privilege is displayed");
+            Assert.assertTrue(true,"User able to see enabled privilege");
+        }
+        else {
+            logger.error("Enabled privilege is not displayed");
+            Assert.fail("Enabled privilege not displayed");
+        }
+    }
+
+    public void verifyAdminUsersPrivilegesNonEditable() {
+        Utility.explicitlyWait(allPrivilegesAccessMessage,driver,5);
+        if(allPrivilegesAccessMessage.isDisplayed()){
+            logger.info("User is admin and have all privileges access");
+            Assert.assertTrue(true,"User have all privileges access");
+        }
+        else {
+            logger.error("User is admin but still able to edit privileges");
+            Assert.fail("Admin user's privileges are editable");
+        }
+    }
+    public void selectUserAndClickOnDelete(String expectedUserName)
+    {
+        WebElement deleteIconForTheUser=driver.findElement(By.xpath("//android.view.ViewGroup[contains(@content-desc,'"+expectedUserName+"')]//android.view.ViewGroup[@content-desc=\"\uE69F\"]"));
+        Utility.explicitlyWait(deleteIconForTheUser,driver,10);
+        deleteIconForTheUser.click();
+        logger.info("Clicked on Delete icon for the user: "+expectedUserName);
+    }
+    public void confirmDelete(){
+        Utility.explicitlyWait(okButtonForConfirmation,driver,5);
+        okButtonForConfirmation.click();
+        logger.info("Clicked on OK");
+    }
+    public void observeDeletedUserNotDisplayed(String expectedUserName) throws InterruptedException {
+        Thread.sleep(1000);
+        List<WebElement> userCards = driver.findElements(By.xpath("//android.view.ViewGroup[contains(@content-desc, ', ')]"));
+        if (userCards.isEmpty()) {
+            WebElement defaultMessage = driver.findElement(By.xpath("//android.widget.TextView[@text=\"No Users Found\"]"));
+            if (defaultMessage.isDisplayed()) {
+                logger.info("Default message is displayed: No users found.");
+            } else {
+                logger.warn("No users found, but the default message is missing.");
+            }
+            return; // Exit the function since no users are available
+        }
+
+        // Iterate through user cards to check if expected user is present
+        boolean userFound = false;
+        for (WebElement userCard : userCards) {
+            String contentDesc = userCard.getAttribute("contentDescription");
+            String[] userDetails = contentDesc.split(", ");
+            String Name = userDetails.length > 1 ? userDetails[1] : "Unknown name";
+
+            // Check if extracted name matches the expected user name
+            if (Name.contains(expectedUserName)) {
+                logger.info("Deleted user is displayed in list: " + expectedUserName);
+                userFound = true;
+                Assert.fail("Deleted user '" + expectedUserName + "' is found in the user list");
+                break; // Exit loop once found
+            }
+        }
+        if (!userFound) {
+            logger.warn("Searched user '" + expectedUserName + "' is not found in the user list.");
+            Assert.assertTrue(true,"Deleted user '" + expectedUserName + "' is not found in the user list");
+        }
+    }
+    public boolean isMultipleAdminAvailable()
+    {
+        if(adminListOnUsersListScreen.size()==1){
+            logger.info("Only one admin is available for the clinic");
+            return true;
+        }
+        else
+        {
+            logger.info("Multiple admins are available for the clinic");
+            return false;
+        }
+    }
+    public void multipleAdminIsAvailable()
+    {
+        if(!isMultipleAdminAvailable())
+        {
+            logger.info("Multiple admins are present");
+            Assert.assertTrue(true,"Multiple admin available");
+        }
+        else
+        {
+            Assert.fail("Only one admin is available for the clinic");
+        }
     }
 
 
