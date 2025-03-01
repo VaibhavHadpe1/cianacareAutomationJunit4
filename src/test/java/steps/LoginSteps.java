@@ -26,7 +26,7 @@ public class LoginSteps {
 
     @When("user enter a valid mobile number and click Continue")
     public void userEnterAValidMobileNumberAndClickContinue() throws IOException, InterruptedException {
-        loginPage.enterValidMobileNumber();
+        loginPage.enterValidMobileNumber(Utility.readDataFromPropertyFile("loginNumberOfAdmin"));
         loginPage.clickOnContinueButton();
     }
 
@@ -38,7 +38,7 @@ public class LoginSteps {
 
     @Then("user should be redirected to the switch clinic screen and select a clinic")
     public void userShouldBeRedirectedToTheSwitchClinicScreenAndSelectAClinic() throws IOException {
-        loginPage.selectClinic();
+        loginPage.selectClinic(Utility.readDataFromPropertyFile("registrationClinicName"));
     }
 
     @And("be successfully logged in and present on the dashboard")
@@ -48,7 +48,7 @@ public class LoginSteps {
 
     @Then("user loggedout from the cianacare application")
     public void userLoggedoutFromTheCianacareApplication() throws InterruptedException {
-        loginPage.logoutFromDahsboard();
+        loginPage.logoutFromDashboard();
         loginPage.clickOnHome();
     }
 

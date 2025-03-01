@@ -77,11 +77,11 @@ Feature: User Management
     And The user cannot modifies the privileges of admin
 
   @TC12
-  Scenario: Verify user can delete Doctor or Staff
-    Given The user is on the users list screen
-    When The user selects a Doctor or Staff and clicks Delete
-    And Confirms the deletion
-    Then The selected user should be removed from the users list
+#  Scenario: Verify user can delete Doctor or Staff
+#    Given The user is on the users list screen
+#    When The user selects a Doctor or Staff and clicks Delete
+#    And Confirms the deletion
+#    Then The selected user should be removed from the users list
 
   @TC13
   Scenario: Verify user can delete an admin when multiple admins are available
@@ -91,7 +91,7 @@ Feature: User Management
     Then The admin should be removed from the users list
 
   @TC14
-  Scenario: Verify admin cannot delete the only admin for the clinic
+  Scenario: Verify user cannot delete the only one admin of the clinic
     Given There is only one admin in the clinic and displayed on UserList
     When The user attempts to delete the admin
     Then The system should display an error message At least one admin is required

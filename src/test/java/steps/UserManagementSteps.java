@@ -37,7 +37,7 @@ public class UserManagementSteps {
     }
     @Then("The logged-in admin should be displayed in the users list by default")
     public void the_logged_in_admin_should_be_displayed_in_the_users_list_by_default() throws IOException, InterruptedException {
-        userListPage.verifyAdminIsDisplayed(Utility.readDataFromPropertyFile("loggedInAdminName"));
+        userListPage.verifyAdminIsDisplayed(Utility.readDataFromPropertyFile("fullName"));
 
     }
     @Then("No other users should be shown if no additional admins, doctors, or staff are available")
@@ -45,7 +45,6 @@ public class UserManagementSteps {
         userListPage.verifyOnlyOneAdminIsPresentOnUsersScreen();
 
     }
-
     @Given("The user is on the users list screen")
     public void the_user_is_on_the_users_list_screen() {
         userListPage.verifyUserIsPresentOnUsersListScreen();
@@ -58,6 +57,7 @@ public class UserManagementSteps {
     }
     @When("The user enters required doctor details and submits the form")
     public void the_user_enters_required_doctor_details_and_submits_the_form() throws IOException, InterruptedException {
+        personalInformationPage.sendInputToField("Mobile number*",Utility.readDataFromPropertyFile("doctorRegistrationMobileNumber"));
         personalInformationPage.sendInputToField("First name*",Utility.readDataFromPropertyFile("doctorFirstName"));
         personalInformationPage.sendInputToField("Last name*",Utility.readDataFromPropertyFile("doctorLastName"));
         clinicInformationPage.selectOptions(Collections.singletonList("Male"));
@@ -74,7 +74,6 @@ public class UserManagementSteps {
 
           userListPage.verifyUserIspresentOnMedicalRegistrationScreen();
           userListPage.enterMedicalRegistrationAndNavigatesToNext();
-          personalInformationPage.sendInputToField("Mobile number*",Utility.readDataFromPropertyFile("doctorRegistrationMobileNumber"));
 
           userListPage.verifyUserIsPresentOnMedicalSpecialityScreen();
           userListPage.enterMedicalSpecialityAndNavigatesToNext();
@@ -161,13 +160,14 @@ public class UserManagementSteps {
 
     }
     @When("The user enters a name in the search bar")
-    public void the_user_enters_a_name_in_the_search_bar() {
-        userListPage.search("searchAvailableUser");
+    public void the_user_enters_a_name_in_the_search_bar() throws IOException {
+        userListPage.search(Utility.readDataFromPropertyFile("searchAvailableUser"));
 
     }
     @Then("The matching users should be displayed in the results")
     public void the_matching_users_should_be_displayed_in_the_results() throws InterruptedException, IOException {
         userListPage.observeUserDisplayed(Utility.readDataFromPropertyFile("searchAvailableUser"));
+        userListPage.clearSearchInput();
 
     }
 
@@ -179,16 +179,17 @@ public class UserManagementSteps {
     @Then("The message No users found should be displayed")
     public void the_message_no_users_found_should_be_displayed() throws IOException, InterruptedException {
         userListPage.observeUserDisplayed(Utility.readDataFromPropertyFile("searchNonAvailableUser"));
+        userListPage.clearSearchInput();
 
 
     }
     @Then("The edit option for logged in user should not be available from user list")
     public void the_edit_option_for_logged_in_user_should_not_be_available_from_user_list() throws IOException {
-        userListPage.verifyLoggedInUserNotEditSelfProfileFromUserList(Utility.readDataFromPropertyFile("loginNumberOfAdmin"));
+        userListPage.verifyLoggedInUserNotEditSelfProfileFromUserList(Utility.readDataFromPropertyFile("registrationMobileNumber"));
     }
     @When("The user selects a doctor and clicks on Edit Privileges")
-    public void the_user_selects_a_doctor_and_clicks_on_edit_privileges() {
-        userListPage.selectUserAndClickToEdit("Amit Sivan");
+    public void the_user_selects_a_doctor_and_clicks_on_edit_privileges() throws IOException {
+        userListPage.selectUserAndClickToEdit(Utility.readDataFromPropertyFile("doctorFullName"));
     }
     @And("The user modifies the doctor privileges and saves the changes")
     public void the_user_modifies_the_doctor_privileges_and_saves_the_changes() throws InterruptedException {
@@ -204,8 +205,8 @@ public class UserManagementSteps {
         userListPage.clickOnBackButtonToCloseDropdown();
     }
     @When("The user selects a staff member and clicks on Edit Privileges")
-    public void the_user_selects_a_staff_member_and_clicks_on_edit_privileges() {
-        userListPage.selectUserAndClickToEdit("Riya Ch");
+    public void the_user_selects_a_staff_member_and_clicks_on_edit_privileges() throws IOException {
+        userListPage.selectUserAndClickToEdit(Utility.readDataFromPropertyFile("staffFullName"));
 
     }
     @When("The user modifies the staff privileges and saves the changes")
@@ -213,6 +214,8 @@ public class UserManagementSteps {
         userListPage.listOfUsersPrivileges();
         userListPage.enablePrivilege("Subscriptions");
         userListPage.enablePrivilege("Schedules");
+        Utility.swipeDown(driver);
+        userListPage.enablePrivilege("User management");
         userListPage.clickOnSave();
         userListPage.listOfUsersPrivileges();
     }
@@ -226,8 +229,8 @@ public class UserManagementSteps {
     }
 
     @When("The user selects an admin and clicks on Edit Privileges")
-    public void the_user_selects_an_admin_and_clicks_on_edit_privileges() throws InterruptedException {
-        userListPage.selectUserAndClickToEdit("Nikita");
+    public void the_user_selects_an_admin_and_clicks_on_edit_privileges() throws InterruptedException, IOException {
+        userListPage.selectUserAndClickToEdit(Utility.readDataFromPropertyFile("adminFullName"));
         userListPage.listOfUsersPrivileges();
         userListPage.clickOnEditPrivilegesButton();
     }
@@ -257,7 +260,7 @@ public class UserManagementSteps {
     @Given("There are multiple admins in the clinic and displayed on UserList")
     public void there_are_multiple_admins_in_the_clinic_And_Displayed_On_UserList() {
         userListPage.verifyUserIsPresentOnUsersListScreen();
-        userListPage.multipleAdminIsAvailable();
+        userListPage.multipleAdminsAreAvailable();
 
     }
     @When("The user selects an admin and clicks Delete")
@@ -267,58 +270,74 @@ public class UserManagementSteps {
     }
     @Then("The admin should be removed from the users list")
     public void the_admin_should_be_removed_from_the_users_list() throws IOException, InterruptedException {
-        userListPage.observeDeletedUserNotDisplayed(Utility.readDataFromPropertyFile(Utility.readDataFromPropertyFile("adminToBeDeleted")));
+        userListPage.observeDeletedUserNotDisplayed(Utility.readDataFromPropertyFile("adminToBeDeleted"));
     }
 
     @Given("There is only one admin in the clinic and displayed on UserList")
-    public void there_is_only_one_admin_in_the_clinic_And_Displayed_On_UserList() {
+    public void there_is_only_one_admin_in_the_clinic_And_Displayed_On_UserList() throws IOException, InterruptedException {
+        userListPage.clickOnBackButtonToCloseDropdown();
+        loginPage.logoutFromDashboard();
+        userListPage.loginToUserAccount(Utility.readDataFromPropertyFile("staffRegistrationMobileNumber"));
+        userListPage.clickOnSettings();
+        userListPage.clickOnUsersFeatureOnSettings();
+        userListPage.verifyOnlyOneAdminIsPresentOnUsersScreen();
 
     }
     @When("The user attempts to delete the admin")
-    public void the_user_attempts_to_delete_the_admin() {
+    public void the_user_attempts_to_delete_the_admin() throws IOException {
+        userListPage.selectUserAndClickOnDelete(Utility.readDataFromPropertyFile("fullName"));
+        userListPage.confirmDelete();
 
     }
     @Then("The system should display an error message At least one admin is required")
     public void the_system_should_display_an_error_message_at_least_one_admin_is_required() {
+        userListPage.verifyErrorForAtLeastOneAdmin();
 
     }
 
     @Given("The doctor logs into the application independently")
-    public void the_doctor_logs_into_the_application_independently() {
+    public void the_doctor_logs_into_the_application_independently() throws IOException, InterruptedException {
+        userListPage.clickOnBackButtonToCloseDropdown();
+        loginPage.logoutFromDashboard();
+        userListPage.loginToUserAccount(Utility.readDataFromPropertyFile("doctorRegistrationMobileNumber"));
 
     }
     @Then("The doctor's dashboard should be displayed correctly")
     public void the_doctor_s_dashboard_should_be_displayed_correctly() {
+        loginPage.verifyUserIsOnDashboard();
 
     }
     @Then("The doctor's details should be visible and accurate")
-    public void the_doctor_s_details_should_be_visible_and_accurate() {
-
+    public void the_doctor_s_details_should_be_visible_and_accurate() throws IOException {
+        userListPage.verifyUserProfileDetailsOnDashboard(Utility.readDataFromPropertyFile("doctorFullName"));
     }
 
     @Given("The staff logs into the application independently")
-    public void the_staff_logs_into_the_application_independently() {
-
+    public void the_staff_logs_into_the_application_independently() throws InterruptedException, IOException {
+        loginPage.logoutFromDashboard();
+        userListPage.loginToUserAccount(Utility.readDataFromPropertyFile("staffRegistrationMobileNumber"));
     }
     @Then("The staff's dashboard should be displayed correctly")
     public void the_staff_s_dashboard_should_be_displayed_correctly() {
-
+        loginPage.verifyUserIsOnDashboard();
     }
     @Then("The staff's details should be visible and accurate")
-    public void the_staff_s_details_should_be_visible_and_accurate() {
-
+    public void the_staff_s_details_should_be_visible_and_accurate() throws IOException {
+        userListPage.verifyUserProfileDetailsOnDashboard(Utility.readDataFromPropertyFile("staffFullName"));
     }
 
     @Given("The admin logs into the application independently")
-    public void the_admin_logs_into_the_application_independently() {
-
+    public void the_admin_logs_into_the_application_independently() throws InterruptedException, IOException {
+        loginPage.logoutFromDashboard();
+        userListPage.loginToUserAccount(Utility.readDataFromPropertyFile("registrationMobileNumber"));
     }
     @Then("The admin's dashboard should be displayed correctly")
     public void the_admin_s_dashboard_should_be_displayed_correctly() {
+        loginPage.verifyUserIsOnDashboard();
 
     }
     @Then("The admin's details should be visible and accurate")
-    public void the_admin_s_details_should_be_visible_and_accurate() {
-
+    public void the_admin_s_details_should_be_visible_and_accurate() throws IOException {
+        userListPage.verifyUserProfileDetailsOnDashboard(Utility.readDataFromPropertyFile("fullName"));
     }
 }

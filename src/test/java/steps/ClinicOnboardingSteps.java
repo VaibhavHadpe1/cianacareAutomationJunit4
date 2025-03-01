@@ -102,7 +102,7 @@ public class ClinicOnboardingSteps {
         personalInformationPage.sendInputToField("First name*",Utility.readDataFromPropertyFile("firstName"));
         personalInformationPage.sendInputToField("Last name*",Utility.readDataFromPropertyFile("lastName"));
         personalInformationPage.sendInputToField("Email address*",Utility.readDataFromPropertyFile("emailAddress"));
-        personalInformationPage.sendInputToField("Clinic name*",Utility.readDataFromPropertyFile("registrationclinicName"));
+        personalInformationPage.sendInputToField("Clinic name*",Utility.readDataFromPropertyFile("registrationClinicName"));
     }
 
     @Then("The details should be accepted successfully")

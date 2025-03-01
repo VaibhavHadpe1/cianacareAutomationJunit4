@@ -62,11 +62,11 @@ public class LoginPage
             logger.error("Application not loaded successfully and login screen not displayed");
         }
     }
-    public void enterValidMobileNumber() throws IOException, InterruptedException {
+    public void enterValidMobileNumber(String userMobileNumber) throws IOException, InterruptedException {
         Utility.explicitlyWait(mobileNumberField,driver,10);
         mobileNumberField.click();
         Utility.explicitlyWait(mobileNumberInputField,driver,10);
-        mobileNumberInputField.sendKeys(Utility.readDataFromPropertyFile("loginNumberOfAdmin"));
+        mobileNumberInputField.sendKeys(userMobileNumber);
         logger.info("Valid mobile number entered");
     }
     public void enterInValidMobileNumber() throws IOException {
@@ -92,12 +92,12 @@ public class LoginPage
         Utility.explicitlyWait(verifyOTPButton,driver,10);
         verifyOTPButton.click();
     }
-    public void selectClinic() throws IOException {
+    public void selectClinic(String expectedClinicName) throws IOException {
         Utility.explicitlyWait(clinicCard,driver,10);
         List<WebElement>clinicDetails=driver.findElements(By.xpath("//android.view.ViewGroup[contains(@content-desc, 'home_prof_pic_id')]//android.widget.TextView"));
         for(WebElement clinic:clinicDetails)
         {
-            if(clinic.getText().contains(Utility.readDataFromPropertyFile("AdmincClinicName")))
+            if(clinic.getText().contains(expectedClinicName))
             {
                 System.out.println("Matching clinic found: " + clinic.getText());
                 clinic.click();
@@ -115,7 +115,7 @@ public class LoginPage
             logger.error("Home button is not displayed");
         }
     }
-    public void logoutFromDahsboard() throws InterruptedException {
+    public void logoutFromDashboard() throws InterruptedException {
         Utility.explicitlyWait(settingsButton,driver,5);
         settingsButton.click();
         Utility.explicitlyWait(logoutOPtionOnSettingsScreen,driver,5);

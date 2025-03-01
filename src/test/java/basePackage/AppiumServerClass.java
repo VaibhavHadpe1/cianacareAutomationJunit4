@@ -19,7 +19,7 @@ public class AppiumServerClass
                 .usingDriverExecutable(new File("C:\\Program Files\\nodejs\\node.exe"))
                 .usingPort(4723)
                 .withArgument(GeneralServerFlag.LOCAL_TIMEZONE)
-                .withLogFile(new File("D:\\cianacareAutomation\\AppiumLogs11.txt"))
+                .withLogFile(new File("D:\\cianacareAutomation\\AppiumLogs_.txt"))
                 .withIPAddress("127.0.0.1");
         server=AppiumDriverLocalService.buildService(builder);
     }
