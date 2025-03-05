@@ -898,4 +898,10 @@ public class UserListPage {
         searchInputField.clear();
         logger.info("Search input field is cleared");
     }
+
+    public void addExistingStaffDetails(String existingStaffMobileNumber) throws InterruptedException {
+        personalInformationPage.sendInputToField("Mobile number*",existingStaffMobileNumber);
+        clickOnNext();
+        logger.info("Existing user's details entered successfully and moved to next screen.");
+    }
 }

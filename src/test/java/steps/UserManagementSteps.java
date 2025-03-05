@@ -340,4 +340,17 @@ public class UserManagementSteps {
     public void the_admin_s_details_should_be_visible_and_accurate() throws IOException {
         userListPage.verifyUserProfileDetailsOnDashboard(Utility.readDataFromPropertyFile("fullName"));
     }
+
+    @And("The user enters required existing staff details and submits the form")
+    public void theUserEntersRequiredExistingStaffDetailsAndSubmitsTheForm() throws IOException, InterruptedException {
+        userListPage.addExistingStaffDetails(Utility.readDataFromPropertyFile("existingStaffMobileNumber"));
+        userListPage.enablePrivilege("Appointment management");
+        userListPage.enablePrivilege("Subscriptions");
+        userListPage.clickOnSubmit();
+    }
+
+    @And("The added existing staff should be visible in the users list")
+    public void theAddedExistingStaffShouldBeVisibleInTheUsersList() throws IOException, InterruptedException {
+        userListPage.verifyStaffIsDisplayed(Utility.readDataFromPropertyFile("existingStaffFullName"));
+    }
 }

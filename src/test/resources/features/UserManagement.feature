@@ -77,38 +77,46 @@ Feature: User Management
     And The user cannot modifies the privileges of admin
 
   @TC12
-#  Scenario: Verify user can delete Doctor or Staff
-#    Given The user is on the users list screen
-#    When The user selects a Doctor or Staff and clicks Delete
-#    And Confirms the deletion
-#    Then The selected user should be removed from the users list
+  Scenario: Verify user can add existing staff through users
+    Given The user is on the users list screen
+    When The user clicks on Add button and selects Staff
+    And The user enters required existing staff details and submits the form
+    Then The staff should be added successfully
+    And The added existing staff should be visible in the users list
 
   @TC13
+  Scenario: Verify user can delete Doctor or Staff
+    Given The user is on the users list screen
+    When The user selects a Doctor or Staff and clicks Delete
+    And Confirms the deletion
+    Then The selected user should be removed from the users list
+
+  @TC14
   Scenario: Verify user can delete an admin when multiple admins are available
     Given There are multiple admins in the clinic and displayed on UserList
     When The user selects an admin and clicks Delete
     And Confirms the deletion
     Then The admin should be removed from the users list
 
-  @TC14
+  @TC15
   Scenario: Verify user cannot delete the only one admin of the clinic
     Given There is only one admin in the clinic and displayed on UserList
     When The user attempts to delete the admin
     Then The system should display an error message At least one admin is required
 
-  @TC15
+  @TC16
   Scenario: Verify doctor can log in independently and view details correctly
     Given The doctor logs into the application independently
     Then The doctor's dashboard should be displayed correctly
     And The doctor's details should be visible and accurate
 
-  @TC16
+  @TC17
   Scenario: Verify staff can log in independently and view details correctly
     Given The staff logs into the application independently
     Then The staff's dashboard should be displayed correctly
     And The staff's details should be visible and accurate
 
-  @TC17
+  @TC18
   Scenario: Verify admin can log in independently and view details correctly
     Given The admin logs into the application independently
     Then The admin's dashboard should be displayed correctly
