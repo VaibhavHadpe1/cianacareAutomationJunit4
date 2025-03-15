@@ -17,21 +17,20 @@ public class Hooks extends Base{
         EmulatorLauncher.startEmulator();
         AppiumServerClass.startAppium();
         Utility.setDriver();
-        LoginPage loginPage=new LoginPage(driver);
+//        LoginPage loginPage=new LoginPage(driver);
 //        loginPage.opencianacare();
-//        loginPage.enterValidMobileNumber();
+//        loginPage.enterValidMobileNumber(Utility.readDataFromPropertyFile("registrationMobileNumber"));
 //        loginPage.clickOnContinueButton();
 //        loginPage.enterOTP();
 //        loginPage.clickOnVerifyOTPButton();
-//        loginPage.selectClinic();
+//        loginPage.selectClinic(Utility.readDataFromPropertyFile("registrationClinicName"));
     }
     @AfterAll
     public static void tearDown() throws InterruptedException {
-        LoginPage loginPage=new LoginPage(driver);
-//        loginPage.logoutFromDahsboard();
+//        LoginPage loginPage=new LoginPage(driver);
+//        loginPage.logoutFromDashboard();
 //        loginPage.clickOnHome();
-//        Thread.sleep(1000);
-
+        Thread.sleep(1000);
         // This will stop the Appium server after all scenario
         if (driver != null) {
             System.out.println("CleanedUp Appium session");
@@ -41,7 +40,6 @@ public class Hooks extends Base{
         else {
             System.out.println("Server is not stopped");
         }
-
     }
 }
 

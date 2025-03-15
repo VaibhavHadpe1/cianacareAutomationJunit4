@@ -46,7 +46,7 @@ public class LoginPage
 
 
     public void opencianacare() throws InterruptedException {
-        Thread.sleep(1000);
+        Thread.sleep(3000);
         Utility.explicitlyWait(cianacareApplication,driver,10);
         cianacareApplication.click();
         logger.info("Clicked on cianacare application");

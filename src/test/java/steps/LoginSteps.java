@@ -26,7 +26,7 @@ public class LoginSteps {
 
     @When("user enter a valid mobile number and click Continue")
     public void userEnterAValidMobileNumberAndClickContinue() throws IOException, InterruptedException {
-        loginPage.enterValidMobileNumber(Utility.readDataFromPropertyFile("loginNumberOfAdmin"));
+        loginPage.enterValidMobileNumber(Utility.readDataFromPropertyFile("registrationMobileNumber"));
         loginPage.clickOnContinueButton();
     }
 

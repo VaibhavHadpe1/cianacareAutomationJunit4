@@ -6,6 +6,8 @@ import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utility.Utility;
@@ -37,13 +39,11 @@ public class PersonalInformationPage {
         }
     }
     public void sendInputToField(String title,String userInput) throws InterruptedException {
-        Thread.sleep(1000);
-        WebElement fieldTitle=driver.findElement(By.xpath("//android.widget.TextView[@text='"+title+"']"));
-        Utility.explicitlyWait(fieldTitle,driver,10);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebElement fieldTitle=wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//android.widget.TextView[@text='"+title+"']")));
         fieldTitle.click();
-        Thread.sleep(1000);
-        WebElement fieldPlaceholder=driver.findElement(By.xpath("//android.view.ViewGroup[android.widget.TextView[@text='"+title+"']]//android.widget.EditText"));
-        Utility.explicitlyWait(fieldTitle,driver,10);
+        WebElement fieldPlaceholder=wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//android.view.ViewGroup[android.widget.TextView[@text='"+title+"']]//android.widget.EditText")));
+        fieldPlaceholder.clear();
         fieldPlaceholder.sendKeys(userInput);
         logger.info("Data entered to input field");
     }

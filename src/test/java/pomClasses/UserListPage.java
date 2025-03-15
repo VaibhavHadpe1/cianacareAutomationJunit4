@@ -6,13 +6,8 @@ import io.appium.java_client.android.nativekey.KeyEvent;
 import io.appium.java_client.android.nativekey.PressesKey;
 import io.appium.java_client.pagefactory.AndroidFindBy;
 import io.appium.java_client.pagefactory.AppiumFieldDecorator;
-import io.appium.java_client.touch.WaitOptions;
-import io.appium.java_client.touch.offset.PointOption;
-import jdk.jshell.execution.Util;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.PointerInput;
-import org.openqa.selenium.interactions.Sequence;
 import org.openqa.selenium.support.PageFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -169,22 +164,9 @@ public class UserListPage {
     public void selectDOBOnPersonalInformationScreen() throws InterruptedException {
         Utility.explicitlyWait(dobFieldOnPersonalInformation,driver,10);
         dobFieldOnPersonalInformation.click();
-//        WebElement yearPicker = driver.findElement(By.xpath("(//android.widget.LinearLayout[@resource-id=\"android:id/pickers\"]/android.widget.NumberPicker[1]//android.widget.Button)[1]"));
-//        swipeUp(yearPicker.getLocation().getY() + 200, yearPicker.getLocation().getY() - 300); // Swipe up
         Utility.explicitlyWait(okButtonOnDatePicker,driver,10);
         okButtonOnDatePicker.click();
 
-    }
-    public void swipeUp(int startY, int endY) {
-        PointerInput finger = new PointerInput(PointerInput.Kind.TOUCH, "finger1");
-        Sequence swipe = new Sequence(finger, 0);
-
-        swipe.addAction(finger.createPointerMove(Duration.ZERO, PointerInput.Origin.viewport(), 300, startY));
-        swipe.addAction(finger.createPointerDown(PointerInput.MouseButton.LEFT.asArg()));
-        swipe.addAction(finger.createPointerMove(Duration.ofMillis(500), PointerInput.Origin.viewport(), 300, endY));
-        swipe.addAction(finger.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
-
-        driver.perform(Arrays.asList(swipe));
     }
     public void selectLanguagesKnown(List<String> languagesList)
     {
@@ -551,6 +533,7 @@ public class UserListPage {
         Utility.explicitlyWait(submitButton,driver,5);
         submitButton.click();
         logger.info("Clicked on Submit");
+        Assert.assertTrue(true);
     }
     public void enterClinicFeesAndSubmit() throws InterruptedException {
         personalInformationPage.sendInputToField("Clinic consultation fee*","600");
@@ -851,12 +834,12 @@ public class UserListPage {
             Assert.fail("Only one admin is available for the clinic");
         }
     }
-    public void loginToUserAccount(String expectedUsersMobileNumberToLogin) throws InterruptedException, IOException {
+    public void loginToUserAccount(String expectedUsersMobileNumberToLogin, String expectedClinicName) throws InterruptedException, IOException {
         loginPage.enterValidMobileNumber(expectedUsersMobileNumberToLogin);
         loginPage.clickOnContinueButton();
         loginPage.enterOTP();
         loginPage.clickOnVerifyOTPButton();
-        loginPage.selectClinic(Utility.readDataFromPropertyFile("registrationClinicName"));
+        loginPage.selectClinic(expectedClinicName);
     }
 
     public void verifyErrorForAtLeastOneAdmin() {

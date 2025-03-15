@@ -5,6 +5,7 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import org.testng.Assert;
 import pomClasses.*;
 import utility.Utility;
 
@@ -55,6 +56,8 @@ public class UserManagementSteps {
         userListPage.selectDoctorFromUsersListScreen();
 
     }
+
+
     @When("The user enters required doctor details and submits the form")
     public void the_user_enters_required_doctor_details_and_submits_the_form() throws IOException, InterruptedException {
         personalInformationPage.sendInputToField("Mobile number*",Utility.readDataFromPropertyFile("doctorRegistrationMobileNumber"));
@@ -179,6 +182,7 @@ public class UserManagementSteps {
     @Then("The message No users found should be displayed")
     public void the_message_no_users_found_should_be_displayed() throws IOException, InterruptedException {
         userListPage.observeUserDisplayed(Utility.readDataFromPropertyFile("searchNonAvailableUser"));
+        Thread.sleep(1000);
         userListPage.clearSearchInput();
 
 
@@ -277,7 +281,7 @@ public class UserManagementSteps {
     public void there_is_only_one_admin_in_the_clinic_And_Displayed_On_UserList() throws IOException, InterruptedException {
         userListPage.clickOnBackButtonToCloseDropdown();
         loginPage.logoutFromDashboard();
-        userListPage.loginToUserAccount(Utility.readDataFromPropertyFile("staffRegistrationMobileNumber"));
+        userListPage.loginToUserAccount(Utility.readDataFromPropertyFile("staffRegistrationMobileNumber"),Utility.readDataFromPropertyFile("registrationClinicName"));
         userListPage.clickOnSettings();
         userListPage.clickOnUsersFeatureOnSettings();
         userListPage.verifyOnlyOneAdminIsPresentOnUsersScreen();
@@ -299,7 +303,7 @@ public class UserManagementSteps {
     public void the_doctor_logs_into_the_application_independently() throws IOException, InterruptedException {
         userListPage.clickOnBackButtonToCloseDropdown();
         loginPage.logoutFromDashboard();
-        userListPage.loginToUserAccount(Utility.readDataFromPropertyFile("doctorRegistrationMobileNumber"));
+        userListPage.loginToUserAccount(Utility.readDataFromPropertyFile("doctorRegistrationMobileNumber"),Utility.readDataFromPropertyFile("registrationClinicName"));
 
     }
     @Then("The doctor's dashboard should be displayed correctly")
@@ -315,7 +319,7 @@ public class UserManagementSteps {
     @Given("The staff logs into the application independently")
     public void the_staff_logs_into_the_application_independently() throws InterruptedException, IOException {
         loginPage.logoutFromDashboard();
-        userListPage.loginToUserAccount(Utility.readDataFromPropertyFile("staffRegistrationMobileNumber"));
+        userListPage.loginToUserAccount(Utility.readDataFromPropertyFile("staffRegistrationMobileNumber"),Utility.readDataFromPropertyFile("registrationClinicName"));
     }
     @Then("The staff's dashboard should be displayed correctly")
     public void the_staff_s_dashboard_should_be_displayed_correctly() {
@@ -329,7 +333,7 @@ public class UserManagementSteps {
     @Given("The admin logs into the application independently")
     public void the_admin_logs_into_the_application_independently() throws InterruptedException, IOException {
         loginPage.logoutFromDashboard();
-        userListPage.loginToUserAccount(Utility.readDataFromPropertyFile("registrationMobileNumber"));
+        userListPage.loginToUserAccount(Utility.readDataFromPropertyFile("registrationMobileNumber"),Utility.readDataFromPropertyFile("registrationClinicName"));
     }
     @Then("The admin's dashboard should be displayed correctly")
     public void the_admin_s_dashboard_should_be_displayed_correctly() {
