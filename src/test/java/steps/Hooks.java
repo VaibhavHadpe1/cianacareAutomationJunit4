@@ -30,7 +30,7 @@ public class Hooks extends Base{
 //        LoginPage loginPage=new LoginPage(driver);
 //        loginPage.logoutFromDashboard();
 //        loginPage.clickOnHome();
-        Thread.sleep(1000);
+          Thread.sleep(1000);
         // This will stop the Appium server after all scenario
         if (driver != null) {
             System.out.println("CleanedUp Appium session");

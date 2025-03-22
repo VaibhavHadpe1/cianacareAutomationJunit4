@@ -32,14 +32,16 @@ Feature: Services
 
   @TC5
   Scenario: Verify user is able to edit an existing service
-    Given User is on the Services screen
-    When User selects a service from the list and clicks on the Edit icon
+    Given User is present on dashboard
+    When User clicks on Services from the dashboard
+    And User selects a service from the list and clicks on the Edit icon
     And User updates the service details
     And User clicks on the Save button
     Then The service details should be updated successfully
 
   @TC6
   Scenario: Verify user is able to delete a service
-    Given User is on the Services screen
-    When User selects a service from the list and clicks on the Delete icon
+    Given User is present on dashboard
+    When User clicks on Services from the dashboard
+    And User selects a service from the list and clicks on the Delete icon
     Then The service should be removed from the list successfully

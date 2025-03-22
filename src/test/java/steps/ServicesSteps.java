@@ -90,6 +90,7 @@ public class ServicesSteps {
     public void the_new_service_should_be_added_successfully_and_displayed_in_the_services_list() throws InterruptedException, IOException {
         servicesPage.closeBottomSheet();
         servicesPage.verifyServiceDetails(Utility.readDataFromPropertyFile("serviceName"),Utility.readDataFromPropertyFile("serviceCost"),Utility.readDataFromPropertyFile("serviceDiscount"),Utility.readDataFromPropertyFile("serviceRespectivePerson"));
+        Utility.clickOnBackButton();
     }
 
     @When("User selects a service from the list and clicks on the Edit icon")
@@ -107,6 +108,7 @@ public class ServicesSteps {
     @Then("The service details should be updated successfully")
     public void the_service_details_should_be_updated_successfully() throws IOException, InterruptedException {
         servicesPage.verifyServiceDetails(Utility.readDataFromPropertyFile("serviceName"),Utility.readDataFromPropertyFile("serviceCost"),Utility.readDataFromPropertyFile("updateServiceDiscount"),Utility.readDataFromPropertyFile("serviceRespectivePerson"));
+        Utility.clickOnBackButton();
     }
 
     @When("User selects a service from the list and clicks on the Delete icon")
@@ -117,8 +119,8 @@ public class ServicesSteps {
 
     @Then("The service should be removed from the list successfully")
     public void the_service_should_be_removed_from_the_list_successfully() throws IOException, InterruptedException {
-        userListPage.clickOnBackButtonToCloseDropdown();
-        servicesPage.clickOnServices();
+        Thread.sleep(1000);
         servicesPage.verifyDeletedServiceNotDisplayed(Utility.readDataFromPropertyFile("deleteServiceName"));
+        Utility.clickOnBackButton();
     }
 }

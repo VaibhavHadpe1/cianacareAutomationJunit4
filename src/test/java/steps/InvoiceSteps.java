@@ -158,63 +158,81 @@ public class InvoiceSteps {
     public void the_lab_invoice_for_existing_user_should_be_created_successfully_and_displayed_in_the_invoice_list() throws IOException, InterruptedException {
         invoicePage.clickOnOk();
         Utility.clickOnBackButton();
-        userListPage.search(Utility.readDataFromPropertyFile("labInvoiceExistingUserName"));
+        invoicePage.clickOnFilterIconOnInvoiceScreen();
+        invoicePage.selectFilterValue("Type","Lab order");
+        invoicePage.clickOnApplyFilter();
         Thread.sleep(1000);
-        userListPage.search(" ");
-        invoicePage.verifyInvoiceDetails(Utility.readDataFromPropertyFile("labInvoiceExistingUserName"),"Lab order","100");
-        userListPage.clearSearchInput();
+        invoicePage.verifyInvoiceDetails(Utility.readDataFromPropertyFile("labInvoiceExistingUserName"),"Lab orders","200");
     }
 
     @When("User enters valid lab invoice details of new user")
     public void user_enters_valid_lab_invoice_details_of_new_user() throws InterruptedException, IOException {
-        personalInformationPage.sendInputToField("Mobile number*",Utility.readDataFromPropertyFile("serviceInvoiceNewUserNumber"));
-        personalInformationPage.sendInputToField("Name*",Utility.readDataFromPropertyFile("invoiceNewUserName"));
+        personalInformationPage.sendInputToField("Mobile number*",Utility.readDataFromPropertyFile("labInvoiceNewUserNumber"));
+        personalInformationPage.sendInputToField("Name*",Utility.readDataFromPropertyFile("labInvoiceNewUserName"));
         clinicInformationPage.selectOptions(Collections.singletonList("Male"));
         personalInformationPage.sendInputToField("Age*","22");
-        invoicePage.selectBilledOnDate();
+        //invoicePage.selectBilledOnDate();
         invoicePage.clickOnBillingInformation();
         invoicePage.addExistingLabTestDetails(Utility.readDataFromPropertyFile("labName"),Utility.readDataFromPropertyFile("pathologyTestName"));
+        userListPage.clickOnSave();
+        invoicePage.clickOnBillingInformation();
+        invoicePage.addExistingLabTestDetails(Utility.readDataFromPropertyFile("labName"),Utility.readDataFromPropertyFile("radiologyTestName"));
         userListPage.clickOnSave();
     }
     @Then("The lab invoice for new user should be created successfully and displayed in the invoice list")
     public void the_lab_invoice_for_new_user_should_be_created_successfully_and_displayed_in_the_invoice_list() throws IOException, InterruptedException {
         invoicePage.clickOnOk();
         Utility.clickOnBackButton();
-        userListPage.search(Utility.readDataFromPropertyFile("labInvoiceExistingUserName"));
         Thread.sleep(1000);
-        userListPage.search(" ");
-        invoicePage.verifyInvoiceDetails(Utility.readDataFromPropertyFile("labInvoiceExistingUserName"),"Lab order","100");
-        userListPage.clearSearchInput();
+        invoicePage.clickOnFilterIconOnInvoiceScreen();
+        invoicePage.selectFilterValue("Type","Lab order");
+        invoicePage.clickOnApplyFilter();
+        Thread.sleep(1000);
+        invoicePage.verifyInvoiceDetails(Utility.readDataFromPropertyFile("labInvoiceNewUserName"),"Lab orders","3200");
     }
 
     @When("User selects a lab invoice and clicks on Upload Report")
-    public void user_selects_a_lab_invoice_and_clicks_on_upload_report() {
-
+    public void user_selects_a_lab_invoice_and_clicks_on_upload_report() throws IOException, InterruptedException {
+        invoicePage.clickOnFilterIconOnInvoiceScreen();
+        invoicePage.selectFilterValue("Type","Lab order");
+        invoicePage.clickOnApplyFilter();
+        invoicePage.clickOnUploadReportButtonOfLabOrder(Utility.readDataFromPropertyFile("labInvoiceNewUserName"));
     }
 
     @When("User uploads a valid lab report file")
-    public void user_uploads_a_valid_lab_report_file() {
-
+    public void user_uploads_a_valid_lab_report_file() throws InterruptedException, IOException {
+        invoicePage.selectTestTypeAndTestName("Pathology",Utility.readDataFromPropertyFile("pathologyTestName"));
+        invoicePage.uploadImageFromGallery();
+        Thread.sleep(1000);
+        invoicePage.selectTestTypeAndTestName("Radiology",Utility.readDataFromPropertyFile("radiologyTestName"));
+        invoicePage.uploadImageFromGallery();
+        userListPage.clickOnSave();
+        Thread.sleep(2000);
     }
 
     @Then("The report should be uploaded successfully and associated with the invoice")
-    public void the_report_should_be_uploaded_successfully_and_associated_with_the_invoice() {
-
+    public void the_report_should_be_uploaded_successfully_and_associated_with_the_invoice() throws IOException, InterruptedException {
+        Thread.sleep(1000);
+        Utility.clickOnBackButton();
+        invoicePage.clickOnInvoiceFromDashboard();
+        invoicePage.verifyUploadReportButtonDisabled(Utility.readDataFromPropertyFile("labInvoiceNewUserName"));
     }
 
     @When("User selects a lab invoice clicks on View Report")
-    public void user_selects_a_lab_invoice_clicks_on_view_report() {
-
+    public void user_selects_a_lab_invoice_clicks_on_view_report() throws IOException, InterruptedException {
+        invoicePage.clickOnDownloadReportButtonOfLabOrder(Utility.readDataFromPropertyFile("labInvoiceNewUserName"));
     }
 
     @Then("The uploaded report should be displayed correctly")
-    public void the_uploaded_report_should_be_displayed_correctly() {
-
+    public void the_uploaded_report_should_be_displayed_correctly() throws IOException {
+        invoicePage.viewTestReport(Utility.readDataFromPropertyFile("pathologyTestName"));
+        Utility.clickOnBackButton();
+        servicesPage.closeBottomSheet();
     }
 
     @When("User selects a lab invoice clicks on Download button")
-    public void user_selects_a_lab_invoice_clicks_on_download_button() {
-
+    public void user_selects_a_lab_invoice_clicks_on_download_button() throws InterruptedException, IOException {
+        invoicePage.clickOnDownloadInvoiceButton(Utility.readDataFromPropertyFile("labInvoiceNewUserName"));
     }
 
     @Then("The invoice should be downloaded successfully")

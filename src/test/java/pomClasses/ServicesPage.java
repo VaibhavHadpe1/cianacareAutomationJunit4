@@ -35,6 +35,7 @@ public class ServicesPage {
         Thread.sleep(1000);
         Utility.customizeScrollByCoordinates(driver,900,300,100,300);
         Utility.explicitlyWait(servicesOptionOnDashboard,driver,10);
+        Thread.sleep(1000);
         servicesOptionOnDashboard.click();
         logger.info("Clicked on Services");
     }
@@ -85,21 +86,21 @@ public class ServicesPage {
 
     public void clickOnEditButtonOfExpectedService(String expectedServiceName) throws InterruptedException {
         Thread.sleep(3000);
-        WebElement editIcon=driver.findElement(By.xpath("(//android.view.ViewGroup//android.widget.TextView[@text='"+expectedServiceName+"']/following-sibling::android.view.ViewGroup//android.widget.ImageView)[1]"));
+        WebElement editIcon=driver.findElement(By.xpath("(//android.view.ViewGroup[android.widget.TextView[@text='"+expectedServiceName+"']]/parent::android.view.ViewGroup//android.widget.ImageView)[1]"));
         Utility.explicitlyWait(editIcon,driver,10);
         editIcon.click();
         logger.info("Clicked on edit icon of service");
     }
     public void clickOnDeleteButtonOfExpectedService(String expectedServiceName) throws InterruptedException {
         Thread.sleep(2000);
-        WebElement deleteIcon=driver.findElement(By.xpath("(//android.view.ViewGroup//android.widget.TextView[@text='"+expectedServiceName+"']/following-sibling::android.view.ViewGroup//android.widget.ImageView)[2]"));
+        WebElement deleteIcon=driver.findElement(By.xpath("(//android.view.ViewGroup[android.widget.TextView[@text='"+expectedServiceName+"']]/parent::android.view.ViewGroup//android.widget.ImageView)[2]"));
         Utility.explicitlyWait(deleteIcon,driver,10);
         deleteIcon.click();
         logger.info("Clicked on delete icon of service");
     }
 
     public void verifyDeletedServiceNotDisplayed(String expectedServiceName) throws InterruptedException {
-        Thread.sleep(2000);
+        Thread.sleep(3000);
         List<WebElement>serviceDetails=driver.findElements(By.xpath("//android.widget.TextView[@text='"+expectedServiceName+"']"));
         if(serviceDetails.isEmpty()){
             logger.info("Service is deleted and not displayed");
@@ -109,6 +110,5 @@ public class ServicesPage {
             logger.error("Service not deleted");
             Assert.fail("Service not deleted and displayed in the list");
         }
-
     }
 }
