@@ -236,47 +236,55 @@ public class InvoiceSteps {
     }
 
     @Then("The invoice should be downloaded successfully")
-    public void the_invoice_should_be_downloaded_successfully() {
-
+    public void the_invoice_should_be_downloaded_successfully() throws InterruptedException {
+        Thread.sleep(3000);
+        Utility.clickOnBackButton();
+        servicesPage.verifyUserIsPresentOnExpectedScreen("Invoice ");
     }
 
     @When("User applies a date range filter")
     public void user_applies_a_date_range_filter() {
-
+        invoicePage.applyDateFilter("This month");
     }
 
     @Then("The invoice list should display only invoices within the selected date range")
     public void the_invoice_list_should_display_only_invoices_within_the_selected_date_range() {
-
+        invoicePage.verifyDateFilterResults("This month");
     }
 
     @When("User selects a status filter")
     public void user_selects_a_status_filter() {
-
+        invoicePage.clickOnFilterIconOnInvoiceScreen();
+        invoicePage.selectFilterValue("Status","Paid");
+        invoicePage.clickOnApplyFilter();
     }
 
     @Then("The invoice list should display only invoices matching the selected status")
-    public void the_invoice_list_should_display_only_invoices_matching_the_selected_status() {
-
+    public void the_invoice_list_should_display_only_invoices_matching_the_selected_status() throws InterruptedException {
+        invoicePage.verifyInvoiceTag("Paid");
     }
 
     @When("User selects a payment mode filter")
     public void user_selects_a_payment_mode_filter() {
-
+        invoicePage.clickOnFilterIconOnInvoiceScreen();
+        invoicePage.selectFilterValue("Mode","Cash");
+        invoicePage.clickOnApplyFilter();
     }
 
     @Then("The invoice list should display only invoices matching the selected payment mode")
-    public void the_invoice_list_should_display_only_invoices_matching_the_selected_payment_mode() {
-
+    public void the_invoice_list_should_display_only_invoices_matching_the_selected_payment_mode() throws InterruptedException {
+        invoicePage.verifyInvoiceTag("Cash");
     }
 
     @When("User selects a filter for invoice type")
     public void user_selects_a_filter_for_invoice_type() {
-
+        invoicePage.clickOnFilterIconOnInvoiceScreen();
+        invoicePage.selectFilterValue("Type","Lab order");
+        invoicePage.clickOnApplyFilter();
     }
 
     @Then("The invoice list should display only invoices matching the selected type")
-    public void the_invoice_list_should_display_only_invoices_matching_the_selected_type() {
-
+    public void the_invoice_list_should_display_only_invoices_matching_the_selected_type() throws InterruptedException {
+        invoicePage.verifyInvoiceType("Lab orders");
     }
 }

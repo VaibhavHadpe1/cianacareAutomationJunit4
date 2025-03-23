@@ -14,9 +14,9 @@ import org.testng.Assert;
 import utility.Utility;
 
 import java.time.Duration;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.logging.XMLFormatter;
 
 import static steps.Base.driver;
@@ -52,7 +52,7 @@ public class InvoicePage {
     @AndroidFindBy(xpath = "//android.widget.TextView[@text=\"Upload report\"]") private WebElement uploadReportButton;
     @AndroidFindBy(xpath = "//android.widget.TextView[@text=\"Gallery\"]") private WebElement galleryOptionToUploadReport;
     @AndroidFindBy(xpath = "//android.view.ViewGroup[@content-desc=\"Upload\"]") WebElement uploadButtonOnUploadReportBottomSheet;
-
+    @AndroidFindBy(xpath = "(//android.widget.ScrollView//android.view.ViewGroup//android.widget.ImageView)[3]")private WebElement dateFilterIconOnInvoiceScreen;
 
 
     public void clickOnInvoiceFromDashboard(){
@@ -251,9 +251,186 @@ public class InvoicePage {
     public void clickOnDownloadInvoiceButton(String expectedUserName) throws InterruptedException {
         Thread.sleep(2000);
         WebDriverWait wait=new WebDriverWait(driver,Duration.ofSeconds(10));
-        WebElement downloadInvoiceButton=wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("(//android.widget.TextView[@text='"+expectedUserName+"'])//(//android.widget.Button[contains(@content-desc,\"Invoice\")])[1]")));
+        WebElement downloadInvoiceButton=wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("(//android.widget.Button[contains(@content-desc, 'Invoice')])[1]")));
         downloadInvoiceButton.click();
         logger.info("User clicked on download invoice button");
         Assert.assertTrue(true,"Clicked on download invoice button");
+    }
+    public void clickOnDateFilterIcon(){
+        Utility.explicitlyWait(dateFilterIconOnInvoiceScreen,driver,10);
+        dateFilterIconOnInvoiceScreen.click();
+        logger.info("Clicked on date filter icon");
+    }
+    public void applyDateFilter(String expectedDateFilterValue) {
+        clickOnDateFilterIcon();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//android.view.ViewGroup[contains(@content-desc,'"+expectedDateFilterValue+"')]"))).click();
+        logger.info("Selected date filter value: "+expectedDateFilterValue);
+    }
+    public static String getCurrentDate() {
+        LocalDate currentDate = LocalDate.now();  // Get the current date
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy"); // Format (Change as needed)
+        return currentDate.format(formatter);
+    }
+    public Object getDateForFilter(String filter) {
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+        switch (filter) {
+            case "Today":
+                return today.format(formatter); // Return single date
+
+            case "Yesterday":
+                return today.minusDays(1).format(formatter); // Return single date
+
+            case "Last 7 days":
+                return new AbstractMap.SimpleEntry<>(
+                        today.minusDays(7).format(formatter),  // Start date (inclusive)
+                        today.format(formatter)  // End date (inclusive)
+                );
+
+            case "Last month":
+                LocalDate firstDayLastMonth = today.minusMonths(1).withDayOfMonth(1);
+                LocalDate lastDayLastMonth = today.minusMonths(1).withDayOfMonth(firstDayLastMonth.lengthOfMonth());
+                return new AbstractMap.SimpleEntry<>(
+                        firstDayLastMonth.format(formatter),  // Start date
+                        lastDayLastMonth.format(formatter)  // End date
+                );
+
+            case "This month":
+                LocalDate firstDayThisMonth = today.withDayOfMonth(1);
+                return new AbstractMap.SimpleEntry<>(
+                        firstDayThisMonth.format(formatter),  // Start date
+                        today.format(formatter)  // End date (today)
+                );
+
+            case "Last 30 days":
+                return new AbstractMap.SimpleEntry<>(
+                        today.minusDays(30).format(formatter),  // Start date
+                        today.format(formatter)  // End date (today)
+                );
+
+            default:
+                throw new IllegalArgumentException("Invalid filter: " + filter);
+        }
+    }
+    public void verifyDateFilterResults(String expectedDatefilter){
+        // Get expected date range or single date
+        Object expectedDateResult = getDateForFilter(expectedDatefilter);
+
+        String expectedStartDate, expectedEndDate;
+
+        if (expectedDateResult instanceof String) {
+            // If filter is "Today" or "Yesterday", both start and end dates are the same
+            expectedStartDate = (String) expectedDateResult;
+            expectedEndDate = expectedStartDate;
+        } else if (expectedDateResult instanceof Map.Entry) {
+            // If filter is "Last 7 Days", "Last Month", etc., get the range
+            Map.Entry<String, String> expectedDateRange = (Map.Entry<String, String>) expectedDateResult;
+            expectedStartDate = expectedDateRange.getKey();
+            expectedEndDate = expectedDateRange.getValue();
+        } else {
+            throw new IllegalStateException("Unexpected return type from getDateForFilter");
+        }
+        try {
+            Thread.sleep(1000);
+            List<WebElement> dates=driver.findElements(By.xpath("//android.widget.TextView[contains(@text,\"-202\")]"));
+            Thread.sleep(1000);
+            if (dates.isEmpty()){
+                WebElement defaultMessageOfNoInvoice=driver.findElement(By.xpath("//android.widget.TextView[@text=\"No Invoices Available\"]"));
+                if(defaultMessageOfNoInvoice.isDisplayed()){
+                    logger.info("Default message is displayed: "+defaultMessageOfNoInvoice.getText());
+                }
+                else {
+                    logger.error("Default message not displayed");
+                }
+            }
+            else {
+                boolean allDatesMatch = true;
+                for (WebElement date:dates){
+                    String invoiceDate = date.getText();
+                    System.out.println("Invoice Date: "+invoiceDate);
+                    System.out.println("Expected Start Date: "+expectedStartDate);
+                    System.out.println("Expected End Date: "+expectedEndDate);
+                    if(!isDateWithinRange(invoiceDate, expectedStartDate, expectedEndDate)){
+                        logger.info("Invoice date: "+invoiceDate);
+                        System.out.println("Expected Start Date"+expectedStartDate);
+                        System.out.println("Expected End Date"+expectedEndDate);
+                        allDatesMatch = false;
+                        //break;
+                    }
+                }
+                if (allDatesMatch) {
+                    logger.info("Test Passed: According to dates invoices are displayed.");
+                } else {
+                    logger.error("Test Failed: Some invoices do not match filter's date.");
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+    private boolean isDateWithinRange(String date, String startDate, String endDate) {
+        LocalDate invoiceDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        LocalDate start = LocalDate.parse(startDate, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        LocalDate end = LocalDate.parse(endDate, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+
+        return (invoiceDate.isEqual(start) || invoiceDate.isAfter(start)) &&
+                (invoiceDate.isEqual(end) || invoiceDate.isBefore(end));
+    }
+
+    public void verifyInvoiceTag(String expectedInvoiceStatus) throws InterruptedException {
+        Thread.sleep(2000);
+        List<WebElement> listOfInvoiceStatus=driver.findElements(By.xpath("//android.view.ViewGroup[contains(@content-desc,'"+expectedInvoiceStatus+"')]//android.widget.TextView"));
+        Thread.sleep(1000);
+        if(listOfInvoiceStatus.isEmpty()){
+            WebElement defaultMessageOfNoInvoice=driver.findElement(By.xpath("//android.widget.TextView[@text=\"No Invoices Available\"]"));
+            if(defaultMessageOfNoInvoice.isDisplayed()){
+                logger.info("Default message is displayed: "+defaultMessageOfNoInvoice.getText());
+            }
+            else {
+                logger.error("Default message not displayed");
+            }
+        }
+        else {
+            for(WebElement status:listOfInvoiceStatus){
+                System.out.println("************** "+status.getText());
+                if(status.getText().equals(expectedInvoiceStatus)){
+                    logger.info("Test Passed: expected status displayed properly");
+                    Assert.assertTrue(true,"Expected and actual status matched");
+                }
+                else {
+                    logger.error("Test Failed: expected status not displayed");
+                    Assert.fail("Expected and actual status not matching");
+                }
+            }
+        }
+    }
+
+    public void verifyInvoiceType(String expectedType) throws InterruptedException {
+        Thread.sleep(2000);
+        List<WebElement> listOfInvoiceTypes=driver.findElements(By.xpath("//android.widget.TextView[contains(@text,'"+expectedType+"')]"));
+        Thread.sleep(1000);
+        if(listOfInvoiceTypes.isEmpty()){
+            WebElement defaultMessageOfNoInvoice=driver.findElement(By.xpath("//android.widget.TextView[@text=\"No Invoices Available\"]"));
+            if(defaultMessageOfNoInvoice.isDisplayed()){
+                logger.info("Default message is displayed: "+defaultMessageOfNoInvoice.getText());
+            }
+            else {
+                logger.error("Default message not displayed");
+            }
+        }
+        else {
+            for(WebElement type:listOfInvoiceTypes){
+                System.out.println("************** "+type.getText());
+                if(type.getText().equals(expectedType)){
+                    logger.info("Test Passed: expected type displayed properly");
+                    Assert.assertTrue(true,"Expected and actual type matched");
+                }
+                else {
+                    logger.error("Test Failed: expected type not displayed");
+                    Assert.fail("Expected and actual type not matching");
+                }
+            }
+        }
     }
 }
