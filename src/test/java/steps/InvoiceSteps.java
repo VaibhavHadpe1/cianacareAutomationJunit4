@@ -91,11 +91,8 @@ public class InvoiceSteps {
     public void the_service_invoice_should_be_created_successfully_and_displayed_in_the_invoice_list() throws IOException, InterruptedException {
         invoicePage.clickOnOk();
         Utility.clickOnBackButton();
-        userListPage.search(Utility.readDataFromPropertyFile("invoiceUserName"));
         Thread.sleep(1000);
-        userListPage.search(" ");
         invoicePage.verifyInvoiceDetails(Utility.readDataFromPropertyFile("invoiceUserName"),"Service","2000");
-        userListPage.clearSearchInput();
     }
 
     @When("User enters valid  service invoice details of new user")
@@ -113,11 +110,8 @@ public class InvoiceSteps {
     public void the_service_invoice_for_new_user_should_be_created_successfully_and_displayed_in_the_invoice_list() throws IOException, InterruptedException {
         invoicePage.clickOnOk();
         Utility.clickOnBackButton();
-        userListPage.search(Utility.readDataFromPropertyFile("invoiceNewUserName"));
         Thread.sleep(1000);
-        userListPage.search(" ");
         invoicePage.verifyInvoiceDetails(Utility.readDataFromPropertyFile("invoiceNewUserName"),"Service","2000");
-        userListPage.clearSearchInput();
     }
 
     @When("User clicks on Add Invoice and selects Lab")
@@ -158,6 +152,7 @@ public class InvoiceSteps {
     public void the_lab_invoice_for_existing_user_should_be_created_successfully_and_displayed_in_the_invoice_list() throws IOException, InterruptedException {
         invoicePage.clickOnOk();
         Utility.clickOnBackButton();
+        Thread.sleep(1000);
         invoicePage.clickOnFilterIconOnInvoiceScreen();
         invoicePage.selectFilterValue("Type","Lab order");
         invoicePage.clickOnApplyFilter();
@@ -193,14 +188,13 @@ public class InvoiceSteps {
 
     @When("User selects a lab invoice and clicks on Upload Report")
     public void user_selects_a_lab_invoice_and_clicks_on_upload_report() throws IOException, InterruptedException {
-        invoicePage.clickOnFilterIconOnInvoiceScreen();
-        invoicePage.selectFilterValue("Type","Lab order");
-        invoicePage.clickOnApplyFilter();
+        Thread.sleep(1000);
         invoicePage.clickOnUploadReportButtonOfLabOrder(Utility.readDataFromPropertyFile("labInvoiceNewUserName"));
     }
 
     @When("User uploads a valid lab report file")
     public void user_uploads_a_valid_lab_report_file() throws InterruptedException, IOException {
+        Thread.sleep(1000);
         invoicePage.selectTestTypeAndTestName("Pathology",Utility.readDataFromPropertyFile("pathologyTestName"));
         invoicePage.uploadImageFromGallery();
         Thread.sleep(1000);
@@ -215,18 +209,27 @@ public class InvoiceSteps {
         Thread.sleep(1000);
         Utility.clickOnBackButton();
         invoicePage.clickOnInvoiceFromDashboard();
+        Thread.sleep(1000);
+        invoicePage.clickOnFilterIconOnInvoiceScreen();
+        Thread.sleep(1000);
+        invoicePage.selectFilterValue("Type","Lab order");
+        invoicePage.clickOnApplyFilter();
+        Thread.sleep(1000);
         invoicePage.verifyUploadReportButtonDisabled(Utility.readDataFromPropertyFile("labInvoiceNewUserName"));
     }
 
     @When("User selects a lab invoice clicks on View Report")
     public void user_selects_a_lab_invoice_clicks_on_view_report() throws IOException, InterruptedException {
+        Thread.sleep(2000);
         invoicePage.clickOnDownloadReportButtonOfLabOrder(Utility.readDataFromPropertyFile("labInvoiceNewUserName"));
     }
 
     @Then("The uploaded report should be displayed correctly")
-    public void the_uploaded_report_should_be_displayed_correctly() throws IOException {
+    public void the_uploaded_report_should_be_displayed_correctly() throws IOException, InterruptedException {
         invoicePage.viewTestReport(Utility.readDataFromPropertyFile("pathologyTestName"));
+        Thread.sleep(3000);
         Utility.clickOnBackButton();
+        Thread.sleep(1000);
         servicesPage.closeBottomSheet();
     }
 
