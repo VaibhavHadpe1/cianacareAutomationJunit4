@@ -118,6 +118,7 @@ public class LoginPage
     public void logoutFromDashboard() throws InterruptedException {
         Utility.explicitlyWait(settingsButton,driver,5);
         settingsButton.click();
+        Utility.swipeDown(driver);
         Utility.explicitlyWait(logoutOPtionOnSettingsScreen,driver,5);
         logoutOPtionOnSettingsScreen.click();
         Utility.explicitlyWait(logoutButton,driver,5);

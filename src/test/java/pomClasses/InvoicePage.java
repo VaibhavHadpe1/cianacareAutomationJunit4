@@ -347,12 +347,13 @@ public class InvoicePage {
             else {
                 boolean allDatesMatch = true;
                 for (WebElement date:dates){
-                    String invoiceDate = date.getText();
-                    System.out.println("Invoice Date: "+invoiceDate);
+                    String invoiceDateFull = date.getText();
+                    String invoiceDate=invoiceDateFull.split(" ")[0];
+                    System.out.println("Actual Date: "+invoiceDate);
                     System.out.println("Expected Start Date: "+expectedStartDate);
                     System.out.println("Expected End Date: "+expectedEndDate);
                     if(!isDateWithinRange(invoiceDate, expectedStartDate, expectedEndDate)){
-                        logger.info("Invoice date: "+invoiceDate);
+                        logger.info("Actual date: "+invoiceDate);
                         System.out.println("Expected Start Date"+expectedStartDate);
                         System.out.println("Expected End Date"+expectedEndDate);
                         allDatesMatch = false;
@@ -360,9 +361,9 @@ public class InvoicePage {
                     }
                 }
                 if (allDatesMatch) {
-                    logger.info("Test Passed: According to dates invoices are displayed.");
+                    logger.info("Test Passed: According to dates results are displayed.");
                 } else {
-                    logger.error("Test Failed: Some invoices do not match filter's date.");
+                    logger.error("Test Failed: Some results do not match filter's date.");
                 }
             }
         } catch (Exception e) {
