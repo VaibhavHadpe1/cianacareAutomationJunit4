@@ -97,7 +97,7 @@ public class ReportsSteps {
     public void the_user_selects_a_doctor_from_the_filter_options() throws InterruptedException {
         reportsPage.clickOnFilterIconOnReportsScreen();
         Thread.sleep(1000);
-        invoicePage.selectFilterValue("Doctors","Vaibhav");
+        invoicePage.selectFilterValue("Doctors","Sarita");
         Thread.sleep(1000);
         invoicePage.clickOnApplyFilter();
 
@@ -105,7 +105,7 @@ public class ReportsSteps {
 
     @Then("The filtered consultation revenue reports should be displayed for the selected doctor")
     public void the_filtered_consultation_revenue_reports_should_be_displayed_for_the_selected_doctor() throws InterruptedException {
-        reportsPage.verifyDoctorNamesOnReports("Vaibhav");
+        reportsPage.verifyDoctorNamesOnReports("Sarita");
     }
 
     @When("The user clicks on Export to Excel for consultation revenue")
@@ -115,8 +115,8 @@ public class ReportsSteps {
     }
 
     @Then("The consultation revenue report should be displayed in Excel format")
-    public void the_consultation_revenue_report_should_be_displayed_in_excel_format() {
-
+    public void the_consultation_revenue_report_should_be_displayed_in_excel_format() throws InterruptedException {
+        servicesPage.verifyUserIsPresentOnExpectedScreen("Reports ");
     }
 
     @When("The user clicks on Export to PDF for consultation revenue")
@@ -144,12 +144,12 @@ public class ReportsSteps {
 
     @When("The user selects a date range for service revenue reports")
     public void the_user_selects_a_date_range_for_service_revenue_reports() {
-        invoicePage.applyDateFilter("Yesterday");
+        invoicePage.applyDateFilter("Last 7 days");
     }
 
     @Then("The filtered service revenue reports should be displayed by date")
     public void the_filtered_service_revenue_reports_should_be_displayed_by_date() {
-        invoicePage.verifyDateFilterResults("Yesterday");
+        invoicePage.verifyDateFilterResults("Last 7 days");
     }
 
     @When("The user clicks on Export to PDF for service revenue")
@@ -200,32 +200,37 @@ public class ReportsSteps {
     @When("The user selects an Age filter")
     public void the_user_selects_an_age_filter() {
         reportsPage.clickOnFilterIconOnReportsScreen();
-        reportsPage.enterAgeRangeInFilter(19,20);
+        reportsPage.enterAgeRangeInFilter(20,50);
         invoicePage.clickOnApplyFilter();
     }
 
     @Then("The filtered patient records should be displayed accordingly")
     public void the_filtered_patient_records_should_be_displayed_accordingly() throws InterruptedException {
-        reportsPage.verifyAgeWithinTheRange(19,20);
+        reportsPage.verifyAgeWithinTheRange(20,50);
     }
 
     @When("The user clicks on Export to Excel for patient details")
     public void the_user_clicks_on_export_to_excel_for_patient_details() {
-
+        reportsPage.clickOnExportIcon();
+        reportsPage.clickOnExcelOption();
     }
 
     @Then("The patient details report should be displayed in Excel format")
-    public void the_patient_details_report_should_be_displayed_in_excel_format() {
-
+    public void the_patient_details_report_should_be_displayed_in_excel_format() throws InterruptedException {
+        servicesPage.verifyUserIsPresentOnExpectedScreen("Reports ");
     }
 
     @When("The user clicks on Export to PDF for patient details")
     public void the_user_clicks_on_export_to_pdf_for_patient_details() {
-
+        reportsPage.clickOnExportIcon();
+        reportsPage.clickOnPdfOption();
     }
 
     @Then("The patient details report should be displayed in PDF format")
-    public void the_patient_details_report_should_be_displayed_in_pdf_format() {
-
+    public void the_patient_details_report_should_be_displayed_in_pdf_format() throws InterruptedException {
+        Thread.sleep(4000);
+        Utility.clickOnBackButton();
+        servicesPage.verifyUserIsPresentOnExpectedScreen("Reports ");
+        Utility.clickOnBackButton();
     }
 }

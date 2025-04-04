@@ -186,7 +186,7 @@ public class ReportsPage {
     }
 
     public void selectServiceRevenueTab() {
-        Utility.explicitlyWait(serviceRevenueTab,driver,5);
+        Utility.explicitlyWait(serviceRevenueTab,driver,8);
         serviceRevenueTab.click();
         logger.info("CLicked on Service revenue tab");
     }
