@@ -45,3 +45,12 @@ Feature: Services
     When User clicks on Services from the dashboard
     And User selects a service from the list and clicks on the Delete icon
     Then The service should be removed from the list successfully
+
+  @TC7
+  Scenario: Verify user is able to add a service by providing valid data
+    Given User is on the Services screen
+    When User clicks on the Add Service button
+    And User enters valid service details
+    And User clicks on the Save button
+    Then The new service should be added successfully and displayed in the services list
+    Then user navigates to dashboard

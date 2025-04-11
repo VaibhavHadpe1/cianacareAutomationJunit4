@@ -10,6 +10,7 @@ import pomClasses.TemplatePage;
 import pomClasses.UserListPage;
 import utility.Utility;
 
+import java.io.IOException;
 import java.util.Arrays;
 
 public class TemplatesSteps {
@@ -27,7 +28,8 @@ public class TemplatesSteps {
     }
 
     @Given("The user is logged in as doctor and present on dashboard")
-    public void the_user_is_logged_in_as_doctor_and_present_on_dashboard() {
+    public void the_user_is_logged_in_as_doctor_and_present_on_dashboard() throws IOException, InterruptedException {
+        userListPage.loginToUserAccount(Utility.readDataFromPropertyFile("doctorRegistrationMobileNumber"),Utility.readDataFromPropertyFile("registrationClinicName"));
         loginPage.verifyUserIsOnDashboard();
     }
 
@@ -79,6 +81,7 @@ public class TemplatesSteps {
 
     @Then("Appropriate error messages should be displayed for mandatory fields")
     public void appropriate_error_messages_should_be_displayed_for_mandatory_fields() throws InterruptedException {
+        Thread.sleep(1000);
         templatePage.verifyErrorMessagesForMandatoryFields(Arrays.asList("Disease name is required","Gender is required","Age group is required"));
         Thread.sleep(1000);
         Utility.clickOnBackButton();
@@ -86,7 +89,7 @@ public class TemplatesSteps {
 
     @When("The user enters valid template details and only medication details")
     public void the_user_enters_valid_template_details_and_only_medication_details() throws InterruptedException {
-        templatePage.enterTemplateDetails("Fever","Treatment-1","Male","Young Adults");
+        templatePage.enterTemplateDetails("Fever","Treatment-1","Male","Young adults");
         templatePage.addMedication("Dolo 1000mg","Oral","1-1-1","After meal","3","3 Days");
     }
 
@@ -102,7 +105,7 @@ public class TemplatesSteps {
 
     @When("The user enters valid template and only investigation details")
     public void the_user_enters_valid_template_and_only_investigation_details() throws InterruptedException {
-        templatePage.enterTemplateDetails("Joint pain","Treatment-2","Male","Middle-aged Adults");
+        templatePage.enterTemplateDetails("Joint pain","Treatment-2","Male","Middle-aged adults");
         templatePage.addInvestigation("X-ray");
     }
 
@@ -119,18 +122,18 @@ public class TemplatesSteps {
     @When("The user enters valid medication details and investigation details")
     public void the_user_enters_valid_medication_details_and_investigation_details() throws InterruptedException {
         templatePage.enterTemplateDetails("Cold therapy","Treatment level-1","Female","Any");
-        templatePage.addMedication("3A 250mg","Buccal","STAT","After lunch","5","5 Days");
+        templatePage.addMedication("3A 250mg","Buccal","Stat","After lunch","5","5 Days");
         templatePage.addInvestigation("blood gas");
     }
 
     @When("The user selects any combination of Gender and Age group")
     public void the_user_selects_any_combination_of_gender_and_age_group() throws InterruptedException {
-        templatePage.enterTemplateDetails("Migraine","Treatment level-1","Female","Old-aged Adults");
+        templatePage.enterTemplateDetails("Migraine","Treatment level-1","Female","Old-aged adults");
     }
 
     @When("Enters required details")
     public void enters_required_details() throws InterruptedException {
-        templatePage.addMedication("A Bec","Oral","STAT","After lunch","5","5 Days");
+        templatePage.addMedication("A Bec","Oral","Stat","After lunch","5","5 Days");
     }
 
     @Then("The template should be created successfully for different combination")
@@ -154,7 +157,7 @@ public class TemplatesSteps {
     }
 
     @When("Updates the details")
-    public void updates_the_details() {
+    public void updates_the_details() throws InterruptedException {
         templatePage.selectGender("Male");
         templatePage.selectAgeGroup("Child");
     }

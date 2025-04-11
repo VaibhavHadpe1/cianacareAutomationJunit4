@@ -233,4 +233,9 @@ public class ReportsSteps {
         servicesPage.verifyUserIsPresentOnExpectedScreen("Reports ");
         Utility.clickOnBackButton();
     }
+
+    @Then("User logout from dashboard")
+    public void user_logout_from_dashboard() throws InterruptedException {
+        loginPage.logoutFromDashboard();
+    }
 }

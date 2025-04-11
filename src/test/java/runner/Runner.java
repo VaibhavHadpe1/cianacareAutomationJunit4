@@ -9,10 +9,10 @@ import org.junit.platform.suite.api.Suite;
 
 @Suite
 @IncludeEngines("cucumber")
-@SelectClasspathResource("features/Reports.feature") // Ensure this path is correct
+@SelectClasspathResource("features") // Ensure this path is correct
 @ConfigurationParameter(key = "cucumber.plugin", value = "pretty,json:target/cucumber-reports/Cucumber.json, html:target/cucumber-reports/index.html")
 @ConfigurationParameter(key = "cucumber.glue", value = "steps") // Ensure 'steps' package contains step definitions
-@ConfigurationParameter(key = "cucumber.filter.tags", value = "@run") // Ensure correct tag filtering
+@ConfigurationParameter(key = "cucumber.filter.tags", value = "@run and not @Ignore") // Ensure correct tag filtering
 public class Runner {
 }
 

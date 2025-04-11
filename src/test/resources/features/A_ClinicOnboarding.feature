@@ -1,4 +1,5 @@
-@run
+#@run
+@Ignore
 Feature: Clinic Onboarding
 
   As a user

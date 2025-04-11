@@ -176,6 +176,7 @@ public class ClinicOnboardingSteps {
         userDetailsScreen.clinicVerificationIsPending();
         userDetailsScreen.logoutFromUserDetailsScreen();
         loginPage.verifyLoginScreenLoaded();
+        Utility.clickOnBackButton();
     }
 
 

@@ -121,6 +121,10 @@ public class ServicesSteps {
     public void the_service_should_be_removed_from_the_list_successfully() throws IOException, InterruptedException {
         Thread.sleep(1000);
         servicesPage.verifyDeletedServiceNotDisplayed(Utility.readDataFromPropertyFile("deleteServiceName"));
-        Utility.clickOnBackButton();
+    }
+
+    @Then("user navigates to dashboard")
+    public void userNavigatesToDashboard() {
+        loginPage.verifyUserIsOnDashboard();
     }
 }

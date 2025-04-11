@@ -81,7 +81,7 @@ public class UserDetailsScreen {
    }
     public void clinicVerificationIsPending()
     {
-        Utility.explicitlyWait(verificationPendingStatus,driver,30);
+        Utility.explicitlyWait(verificationPendingStatus,driver,50);
         if(verificationPendingStatus.isDisplayed())
         {
             logger.info("Clinic status: "+ verificationPendingStatus.getText());

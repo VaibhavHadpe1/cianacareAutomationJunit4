@@ -68,6 +68,7 @@ public class UserManagementSteps {
         personalInformationPage.sendInputToField("Email*",Utility.readDataFromPropertyFile("doctorEmail"));
         Utility.swipeDown(driver);
         clinicInformationPage.uploadDocument("Upload id proof");
+        Thread.sleep(1000);
         userListPage.selectLanguagesKnown(Arrays.asList("Telugu","Hindi","English"));
         userListPage.clickOnBackButtonToCloseDropdown();
         userListPage.clickOnNext();

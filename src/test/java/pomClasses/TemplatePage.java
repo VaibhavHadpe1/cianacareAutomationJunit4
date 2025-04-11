@@ -119,8 +119,9 @@ public class TemplatePage {
     public void selectGender(String gender){
         clinicInformationPage.selectOptions(Collections.singletonList(gender));
     }
-    public void selectAgeGroup(String ageGroup){
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//android.widget.TextView[@text=\"Age group *\"]/following-sibling::android.view.ViewGroup//android.widget.Button[contains(@content-desc,'"+ageGroup+"')]"))).click();
+    public void selectAgeGroup(String ageGroup) throws InterruptedException {
+        Thread.sleep(1000);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//android.widget.TextView[@text='Age group *']/following-sibling::android.view.ViewGroup//android.widget.Button[contains(@content-desc,'"+ageGroup+"')]"))).click();
     }
     public void clickOnSaveButtonOfBottomSheet(){
         Utility.explicitlyWait(saveButtonOnBottomSheet,driver,10);

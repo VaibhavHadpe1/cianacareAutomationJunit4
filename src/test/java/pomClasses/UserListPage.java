@@ -168,12 +168,12 @@ public class UserListPage {
         okButtonOnDatePicker.click();
 
     }
-    public void selectLanguagesKnown(List<String> languagesList)
-    {
+    public void selectLanguagesKnown(List<String> languagesList) throws InterruptedException {
         Utility.explicitlyWait(languagesKnownDropdown,driver,10);
         languagesKnownDropdown.click();
+        Thread.sleep(1000);
         for (String language : languagesList) {
-            WebElement languageValue = driver.findElement(By.xpath("//android.widget.TextView[contains(@text,'"+language+"')]"));
+            WebElement languageValue = driver.findElement(By.xpath("//android.view.ViewGroup[contains(@content-desc,'"+language+"')]"));
             Utility.explicitlyWait(languageValue, driver, 10);
             languageValue.click();
             logger.info("Language selected: " + languageValue.getText());
@@ -203,23 +203,24 @@ public class UserListPage {
         Utility.explicitlyWait(addQualification,driver,10);
         addQualification.click();
     }
-    public void selectUniversity(String expectedUniversityName)
-    {
+    public void selectUniversity(String expectedUniversityName) throws InterruptedException {
         Utility.explicitlyWait(universityDropdown,driver,10);
         universityDropdown.click();
+        Thread.sleep(1000);
         driver.findElement(By.xpath("//android.widget.TextView[contains(@text,'"+expectedUniversityName+"')]")).click();
         logger.info("University selected: "+expectedUniversityName);
     }
-    public void selectYearOfGraduation(String expectedYearOfGraduation)
-    {
+    public void selectYearOfGraduation(String expectedYearOfGraduation) throws InterruptedException {
         Utility.explicitlyWait(yearOfGraduationDropdown,driver,10);
         yearOfGraduationDropdown.click();
+        Thread.sleep(1000);
         driver.findElement(By.xpath("//android.widget.TextView[contains(@text,'"+expectedYearOfGraduation+"')]")).click();
         logger.info("Year of graduation selected: "+expectedYearOfGraduation);
     }
-    public void selectState(String expectedStateName){
+    public void selectState(String expectedStateName) throws InterruptedException {
         Utility.explicitlyWait(stateDropdown,driver,10);
         stateDropdown.click();
+        Thread.sleep(1000);
         driver.findElement(By.xpath("//android.widget.TextView[contains(@text,'"+expectedStateName+"')]")).click();
         logger.info("State selected: "+expectedStateName);
     }

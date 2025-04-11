@@ -289,5 +289,6 @@ public class InvoiceSteps {
     @Then("The invoice list should display only invoices matching the selected type")
     public void the_invoice_list_should_display_only_invoices_matching_the_selected_type() throws InterruptedException {
         invoicePage.verifyInvoiceType("Lab orders");
+        Utility.clickOnBackButton();
     }
 }

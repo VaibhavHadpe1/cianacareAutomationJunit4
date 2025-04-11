@@ -92,8 +92,8 @@ public class ServicesPage {
         logger.info("Clicked on edit icon of service");
     }
     public void clickOnDeleteButtonOfExpectedService(String expectedServiceName) throws InterruptedException {
-        Thread.sleep(2000);
-        WebElement deleteIcon=driver.findElement(By.xpath("(//android.view.ViewGroup[android.widget.TextView[@text='"+expectedServiceName+"']]/parent::android.view.ViewGroup//android.widget.ImageView)[2]"));
+        Thread.sleep(3000);
+        WebElement deleteIcon=driver.findElement(By.xpath("(//android.widget.ScrollView[@index=2]//android.view.ViewGroup//android.widget.TextView[contains(@text,'"+expectedServiceName+"')]/following-sibling::android.view.ViewGroup//android.widget.ImageView)[2]"));
         Utility.explicitlyWait(deleteIcon,driver,10);
         deleteIcon.click();
         logger.info("Clicked on delete icon of service");

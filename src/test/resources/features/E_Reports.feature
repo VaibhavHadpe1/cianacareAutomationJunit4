@@ -105,3 +105,4 @@ Feature: Reports
     Given The user is on the Reports screen
     When The user clicks on Export to PDF for patient details
     Then The patient details report should be displayed in PDF format
+    Then User logout from dashboard

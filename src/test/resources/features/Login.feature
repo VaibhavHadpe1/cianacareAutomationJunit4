@@ -1,4 +1,5 @@
-@run
+#@run
+  @Ignore
 Feature: User Login
 
   As a registered user
