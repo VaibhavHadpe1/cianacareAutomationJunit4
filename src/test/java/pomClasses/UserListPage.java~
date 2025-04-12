@@ -759,12 +759,14 @@ public class UserListPage {
 
     public void verifyAdminUsersPrivilegesNonEditable() {
         //Utility.explicitlyWait(allPrivilegesAccessMessage,driver,5);
+        SoftAssert softAssert = new SoftAssert();
         if (!allPrivilegesAccessMessage.isEmpty()) {
             logger.info("User is admin and have all privileges access");
             Assert.assertTrue(true, "User have all privileges access");
         } else {
             logger.error("User is admin but still able to edit privileges");
-            Assert.fail("Admin user's privileges are editable");
+            //Assert.fail("Admin user's privileges are editable");
+            softAssert.fail("Admin user's privileges are editable");
         }
     }
     public void selectUserAndClickOnDelete(String expectedUserName)

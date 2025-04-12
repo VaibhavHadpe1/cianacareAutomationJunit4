@@ -38,7 +38,7 @@ public class LoginPage
     @AndroidFindBy(xpath = "//android.view.ViewGroup[@content-desc=\"home_nav_to_prof_id\"]") private WebElement profileIconOnDashboard;
     @AndroidFindBy(xpath = "//android.widget.TextView[@text=\"Settings\"]")private WebElement settingsButton;
     @AndroidFindBy(xpath = "//android.widget.TextView[@text=\"Log out\"]") private WebElement logoutOPtionOnSettingsScreen;
-    @AndroidFindBy(xpath = "//android.widget.Button[@resource-id=\"android:id/button2\"]")private WebElement logoutButton;
+    @AndroidFindBy(xpath = "//android.widget.Button[@text=\"LOGOUT\"]")private WebElement logoutButton;
     @AndroidFindBy(xpath = "//android.view.ViewGroup[@content-desc=\"header_LG\"]/android.view.ViewGroup") private WebElement goBackHeaderButton;
     @AndroidFindBy(xpath = "//android.widget.TextView[@text=\"Sign up\"]")private WebElement signUpButton;
 
@@ -120,9 +120,11 @@ public class LoginPage
         settingsButton.click();
         Thread.sleep(1000);
         Utility.swipeDown(driver);
-        Utility.explicitlyWait(logoutOPtionOnSettingsScreen,driver,5);
+        Utility.explicitlyWait(logoutOPtionOnSettingsScreen,driver,10);
+        Thread.sleep(1000);
         logoutOPtionOnSettingsScreen.click();
-        Utility.explicitlyWait(logoutButton,driver,5);
+        Utility.explicitlyWait(logoutButton,driver,10);
+        Thread.sleep(1000);
         logoutButton.click();
         Thread.sleep(1000);
         logger.info("User loggedout successfully");

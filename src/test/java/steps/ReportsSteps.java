@@ -7,6 +7,7 @@ import io.cucumber.java.en.When;
 import pomClasses.*;
 import utility.Utility;
 
+import java.io.IOException;
 import java.util.Arrays;
 
 public class ReportsSteps {
@@ -94,18 +95,18 @@ public class ReportsSteps {
     }
 
     @When("The user selects a doctor from the filter options")
-    public void the_user_selects_a_doctor_from_the_filter_options() throws InterruptedException {
+    public void the_user_selects_a_doctor_from_the_filter_options() throws InterruptedException, IOException {
         reportsPage.clickOnFilterIconOnReportsScreen();
         Thread.sleep(1000);
-        invoicePage.selectFilterValue("Doctors","Sarita");
+        invoicePage.selectFilterValue("Doctors",Utility.readDataFromPropertyFile("doctorFullName"));
         Thread.sleep(1000);
         invoicePage.clickOnApplyFilter();
 
     }
 
     @Then("The filtered consultation revenue reports should be displayed for the selected doctor")
-    public void the_filtered_consultation_revenue_reports_should_be_displayed_for_the_selected_doctor() throws InterruptedException {
-        reportsPage.verifyDoctorNamesOnReports("Sarita");
+    public void the_filtered_consultation_revenue_reports_should_be_displayed_for_the_selected_doctor() throws InterruptedException, IOException {
+        reportsPage.verifyDoctorNamesOnReports(Utility.readDataFromPropertyFile("doctorFullName"));
     }
 
     @When("The user clicks on Export to Excel for consultation revenue")

@@ -57,6 +57,11 @@ public class Utility extends Base
     {
         ((PressesKey) driver).pressKey(new KeyEvent().withKey(AndroidKey.BACK));
     }
+    public static void clickOnBackButtonOfScreenHeader(){
+        WebElement backButtonInHeader=driver.findElement(By.xpath("//android.view.ViewGroup[@content-desc=\"header_LG\"]//android.view.ViewGroup//android.widget.ImageView"));
+        Utility.explicitlyWait(backButtonInHeader,driver,10);
+        backButtonInHeader.click();
+    }
 
     public static void swipeDown(AndroidDriver driver) {
         PointerInput finger = new PointerInput(PointerInput.Kind.TOUCH, "finger");
