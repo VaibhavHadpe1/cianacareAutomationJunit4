@@ -215,7 +215,7 @@ public class InvoicePage {
         galleryOptionToUploadReport.click();
         logger.info("Clicked on gallery option");
         WebDriverWait wait=new WebDriverWait(driver,Duration.ofSeconds(10));
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("(//android.view.View//android.view.View[contains(@content-desc,'Photo taken ')])[1]"))).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("(//android.widget.FrameLayout[contains(@content-desc,'Photo ')])[1]"))).click();
         Utility.explicitlyWait(uploadButtonOnUploadReportBottomSheet,driver,10);
         uploadButtonOnUploadReportBottomSheet.click();
         Thread.sleep(2000);
@@ -336,7 +336,7 @@ public class InvoicePage {
             List<WebElement> dates=driver.findElements(By.xpath("//android.widget.TextView[contains(@text,\"-202\")]"));
             Thread.sleep(1000);
             if (dates.isEmpty()){
-                WebElement defaultMessageOfNoInvoice=driver.findElement(By.xpath("//android.widget.TextView[@text=\"No Invoices Available\"]"));
+                WebElement defaultMessageOfNoInvoice=driver.findElement(By.xpath("//android.widget.TextView[@text='No Invoices Available' or @text='No Reports Available']"));
                 if(defaultMessageOfNoInvoice.isDisplayed()){
                     logger.info("Default message is displayed: "+defaultMessageOfNoInvoice.getText());
                 }

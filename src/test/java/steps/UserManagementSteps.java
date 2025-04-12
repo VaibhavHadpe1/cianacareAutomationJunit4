@@ -6,6 +6,7 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.testng.Assert;
+import org.testng.asserts.SoftAssert;
 import pomClasses.*;
 import utility.Utility;
 
@@ -145,6 +146,7 @@ public class UserManagementSteps {
         personalInformationPage.sendInputToField("Last name*",Utility.readDataFromPropertyFile("adminLastName"));
         clinicInformationPage.selectOptions(Collections.singletonList("Female"));
         personalInformationPage.sendInputToField("Email*",Utility.readDataFromPropertyFile("adminEmail"));
+        Thread.sleep(1000);
         userListPage.enableAddAdminToggleButton();
         userListPage.clickOnNext();
         userListPage.clickOnSubmit();
@@ -239,12 +241,14 @@ public class UserManagementSteps {
         userListPage.listOfUsersPrivileges();
         userListPage.clickOnEditPrivilegesButton();
     }
+
     @When("The user cannot modifies the privileges of admin")
     public void the_user_cannot_modifies_the_privileges_of_admin() throws InterruptedException {
         userListPage.verifyAdminUsersPrivilegesNonEditable();
+        Thread.sleep(1000);
         userListPage.clickOnSave();
         userListPage.listOfUsersPrivileges();
-        userListPage.clickOnBackButtonToCloseDropdown();
+        Utility.clickOnBackButton();
     }
     @When("The user selects a Doctor or Staff and clicks Delete")
     public void the_user_selects_a_doctor_or_staff_and_clicks_delete() throws IOException {

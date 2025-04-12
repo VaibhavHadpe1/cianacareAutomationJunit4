@@ -169,9 +169,11 @@ public class TemplatePage {
     }
 
     public void addInvestigation(String expectedTestName) throws InterruptedException {
-        Utility.explicitlyWait(addTestButton,driver,5);
-        addTestButton.click();
+        By addTestBtn = By.xpath("//android.widget.TextView[@text='Add test']");
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        wait.until(ExpectedConditions.elementToBeClickable(addTestBtn)).click();
         logger.info("Clicked on Add test button");
+
         Utility.explicitlyWait(testNameField,driver,5);
         testNameField.sendKeys(expectedTestName);
         Thread.sleep(2000);

@@ -84,7 +84,7 @@ public class TemplatesSteps {
         Thread.sleep(1000);
         templatePage.verifyErrorMessagesForMandatoryFields(Arrays.asList("Disease name is required","Gender is required","Age group is required"));
         Thread.sleep(1000);
-        Utility.clickOnBackButton();
+        Utility.clickOnBackButtonOfScreenHeader();
     }
 
     @When("The user enters valid template details and only medication details")

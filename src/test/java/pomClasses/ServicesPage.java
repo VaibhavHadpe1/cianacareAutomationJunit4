@@ -56,7 +56,8 @@ public class ServicesPage {
         addIcon.click();
         logger.info("Clicked on Add Icon");
     }
-    public void verifyErrorMessages(List<String> expectedErrorMessages) {
+    public void verifyErrorMessages(List<String> expectedErrorMessages) throws InterruptedException {
+        Thread.sleep(1000);
         List<String> actualErrorMessages = errorMessagesOnAddServiceBottomSheet.stream()
                 .map(WebElement::getText)
                 .toList();
