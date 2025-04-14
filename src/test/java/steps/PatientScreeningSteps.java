@@ -12,6 +12,7 @@ import utility.Utility;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 public class PatientScreeningSteps {
     AndroidDriver driver;
@@ -282,57 +283,60 @@ public class PatientScreeningSteps {
 
     @When("The user opens prescription history and selects a medicine")
     public void the_user_opens_prescription_history_and_selects_a_medicine() {
-
+        patientScreeningPage.addMedicineTroughHistory();
     }
 
     @Then("The medicine should be added")
-    public void the_medicine_should_be_added() {
-
+    public void the_medicine_should_be_added() throws InterruptedException {
+        patientScreeningPage.verifyAddedMedicineThroughHistoryDisplayed();
     }
 
     @When("The user clicks Next from Prescribe screen")
     public void the_user_clicks_next_from_prescribe_screen() {
-
+        patientScreeningPage.clickOnNext();
     }
 
     @Then("The user should navigate to the Investigation screen")
-    public void the_user_should_navigate_to_the_investigation_screen() {
-
+    public void the_user_should_navigate_to_the_investigation_screen() throws InterruptedException {
+        servicesPage.verifyUserIsPresentOnExpectedScreen("Investigations");
     }
 
     @Given("The user is on the Investigation screen")
-    public void the_user_is_on_the_investigation_screen() {
-
+    public void the_user_is_on_the_investigation_screen() throws InterruptedException {
+        servicesPage.verifyUserIsPresentOnExpectedScreen("Investigations");
     }
 
     @When("The user searches and adds investigation tests")
-    public void the_user_searches_and_adds_investigation_tests() {
-
+    public void the_user_searches_and_adds_investigation_tests() throws InterruptedException {
+        patientScreeningPage.searchAndSelect("Complete blood count");
+        patientScreeningPage.searchAndSelect("24 Hr Blood Pressure Monitoring");
     }
 
     @Then("The tests should be added to the investigation")
-    public void the_tests_should_be_added_to_the_investigation() {
-
+    public void the_tests_should_be_added_to_the_investigation() throws InterruptedException {
+        patientScreeningPage.addedValues(Arrays.asList("Complete blood count","24 Hr Blood Pressure Monitoring"));
     }
 
     @When("The user removes a test or clicks Clear All")
     public void the_user_removes_a_test_or_clicks_clear_all() {
-
+        patientScreeningPage.removeDataUsingRemoveIcon("Complete blood count");
+        patientScreeningPage.clickOnClearAll();
     }
 
     @Then("The tests should be removed")
-    public void the_tests_should_be_removed() {
-
+    public void the_tests_should_be_removed() throws InterruptedException {
+        patientScreeningPage.verifyRemovedValuesAreNotDisplayed(Arrays.asList("Complete blood count","24 Hr Blood Pressure Monitoring"));
     }
 
     @When("The user adds a custom test or from quick type")
-    public void the_user_adds_a_custom_test_or_from_quick_type() {
-
+    public void the_user_adds_a_custom_test_or_from_quick_type() throws InterruptedException {
+        patientScreeningPage.searchAndSelect("TestCustomValue");
+        patientScreeningPage.addValuesFromQuickType("Lipid profile complete");
     }
 
     @Then("The test should be added")
-    public void the_test_should_be_added() {
-
+    public void the_test_should_be_added() throws InterruptedException {
+        patientScreeningPage.addedValues(Arrays.asList("TestCustomValue","LIPID Profile Complete"));
     }
 
     @When("A test template is available and selected")
@@ -347,47 +351,47 @@ public class PatientScreeningSteps {
 
     @When("The user clicks Next from Investigation screen")
     public void the_user_clicks_next_from_investigation_screen() {
-
+        patientScreeningPage.clickOnNext();
     }
 
     @Then("the user should navigate to Patient Instructions screen")
-    public void the_user_should_navigate_to_patient_instructions_screen() {
-
+    public void the_user_should_navigate_to_patient_instructions_screen() throws InterruptedException {
+        servicesPage.verifyUserIsPresentOnExpectedScreen("Patient Instructions");
     }
 
     @Given("The user is on the Patient instructions screen")
-    public void the_user_is_on_the_patient_instructions_screen() {
-
+    public void the_user_is_on_the_patient_instructions_screen() throws InterruptedException {
+        servicesPage.verifyUserIsPresentOnExpectedScreen("Patient Instructions");
     }
 
     @When("The user adds a patient instruction")
     public void the_user_adds_a_patient_instruction() {
-
+        clinicInformationPage.selectOptions(Arrays.asList("Lose extra pounds","Exercise regularly","eat a healthy diet"));
     }
 
     @Then("It should appear in the list")
-    public void it_should_appear_in_the_list() {
-
+    public void it_should_appear_in_the_list() throws InterruptedException {
+        patientScreeningPage.verifyAddedPatientInstructionsDisplayed("lose extra pounds and watch your waistline exercise regularly eat a healthy diet");
     }
 
     @When("The user removes it")
     public void the_user_removes_it() {
-
+        clinicInformationPage.selectOptions(Collections.singletonList("eat a healthy diet"));
     }
 
     @Then("Instructions should be removed")
     public void instructions_should_be_removed() {
-
+        patientScreeningPage.verifyAddedPatientInstructionsDisplayed("lose extra pounds and watch your waistline exercise regularly");
     }
 
     @When("The user clicks Next from Patient Instructions screen")
     public void the_user_clicks_next_from_patient_instructions_screen() {
-
+        patientScreeningPage.clickOnNext();
     }
 
     @Then("The user should navigate to the Overview screen")
-    public void the_user_should_navigate_to_the_overview_screen() {
-
+    public void the_user_should_navigate_to_the_overview_screen() throws InterruptedException {
+        servicesPage.verifyUserIsPresentOnExpectedScreen("Overview");
     }
 
     @Given("The user is on the Overview screen")

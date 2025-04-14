@@ -20,8 +20,10 @@ import java.util.stream.Collectors;
 import static steps.Base.driver;
 
 public class PatientScreeningPage {
+    ServicesPage servicesPage;
     public PatientScreeningPage(AndroidDriver driver){
         PageFactory.initElements(new AppiumFieldDecorator(driver, Duration.ofSeconds(5)),this);
+        servicesPage=new ServicesPage(driver);
     }
     public static Logger logger= LoggerFactory.getLogger(PatientScreeningPage.class);
     @AndroidFindBy(xpath = "//android.view.ViewGroup[@content-desc=\"Appointments\"]")private WebElement appointmentsFeatureOnDashboard;
@@ -307,9 +309,8 @@ public class PatientScreeningPage {
             wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//android.view.ViewGroup[@index=3]//android.widget.ScrollView//android.view.ViewGroup[contains(@content-desc,'"+expectedTemplateName+"')]"))).click();
             logger.info("Template card is expanded");
             Thread.sleep(1000);
-            String medicineName=driver.findElement(By.xpath("(//android.widget.ScrollView//android.widget.TextView[@text='Medicine']/following-sibling::android.widget.TextView)[1]")).getText();
+            String medicineName=driver.findElement(By.xpath("(//android.widget.ScrollView[@index=0]//android.view.ViewGroup//android.widget.CheckBox/following-sibling::android.widget.TextView)[1]")).getText();
             System.out.println("Medicine Name in Template: "+medicineName);
-            Thread.sleep(1000);
             clickOnAddToPrescription(expectedTemplateName);
             addedValues(Collections.singletonList(medicineName));
         }
@@ -318,10 +319,68 @@ public class PatientScreeningPage {
             Utility.tapOutsideToCloseBottomSheet(driver,300,150);
         }
     }
-    public void clickOnAddToPrescription(String expectedTemplateName){
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//android.widget.Button[@content-desc='Add to prescription']"))).click();
+    public void clickOnAddToPrescription(String expectedTemplateName) throws InterruptedException {
+        Thread.sleep(1000);
+        driver.findElement(By.xpath("//android.widget.Button[@content-desc=\"Add to prescription\"]")).click();
         logger.info("Clicked on Add to prescription button");
     }
+    public void closeBottomSheetInScreening(){
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("(//android.view.ViewGroup[@index=3]//android.view.ViewGroup//android.widget.ImageView)[1]"))).click();
+    }
+    String medicineNames;
+    public void addMedicineTroughHistory(){
+        clickOnHistory();
+        List<WebElement> defaultMessageAsList=driver.findElements(By.xpath("//android.widget.TextView[@text='No History Available']"));
+        if(defaultMessageAsList.isEmpty()){
+            logger.info("History is available and displayed");
+            WebElement medicienName=wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("(//android.widget.ScrollView[@index=1]//android.view.ViewGroup//android.widget.TextView[@index=1])[1]")));
+            medicineNames=medicienName.getText();
+            logger.info("Medicine name in prescription history: "+medicineNames);
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("(//android.widget.Button[@content-desc=\"Repeat\"])[1]"))).click();
+            closeBottomSheetInScreening();
+            logger.info("Clicked on Repeat button and closed the bottom sheet");
+        }
+        else {
+            logger.info("History is not available and default message is displayed");
+            for (WebElement defaultMessage:defaultMessageAsList){
+                logger.info("Default message is "+defaultMessage.getText());
+            }
+        }
+    }
+    public void verifyAddedMedicineThroughHistoryDisplayed() throws InterruptedException {
+        if(medicineNames != null){
+            addedValues(Collections.singletonList(medicineNames));
+            logger.info("Added medicine through history is displayed");
+        }
+        else {
+            logger.info("Added medicine through history is not displayed");
+        }
+    }
+    public static String normalizeText(String text) {
+        // Remove bullet points and special characters like •, *, -, etc.
+        text = text.replaceAll("[•\\-*]", "");
+        // Convert to lowercase
+        text = text.toLowerCase();
+        // Replace multiple whitespaces (including newlines and tabs) with a single space
+        text = text.replaceAll("\\s+", " ").trim();
+        return text;
+    }
 
+    public void verifyAddedPatientInstructionsDisplayed(String expectedPatientInstructions) {
+        WebElement patientInstructions=wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//android.widget.EditText[@resource-id=\"content\"]")));
+        String actualPatientInstructions=patientInstructions.getDomAttribute("text");
 
+        String normalizedActual = normalizeText(actualPatientInstructions);
+        String normalizedExpected = normalizeText(expectedPatientInstructions);
+
+        System.out.println("Normalized Actual: " + normalizedActual);
+        System.out.println("Normalized Expected: " + normalizedExpected);
+
+        if (normalizedActual.equals(normalizedExpected)) {
+            logger.info("Actual and Expected Patient Instructions match");
+        } else {
+            logger.error("Actual and Expected Patient Instructions do not match");
+            Assert.fail("Actual and Expected Patient Instructions do not match");
+        }
+    }
 }
