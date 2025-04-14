@@ -383,5 +383,4 @@ public class PatientScreeningPage {
             Assert.fail("Actual and Expected Patient Instructions do not match");
         }
     }
-
 }
