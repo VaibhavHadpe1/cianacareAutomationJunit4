@@ -108,7 +108,7 @@ Feature: Patient Screening Flow during Appointment
     When The user adds a custom medicine and from quick type
     Then The medicine should be added successfully
 
-  @TC17
+  @TC17//NeedToCheck
   Scenario: Add medicines using templates
     Given The user is on the Prescribe screen
     When A template is available and displayed
@@ -144,7 +144,7 @@ Feature: Patient Screening Flow during Appointment
     When The user adds a custom test or from quick type
     Then The test should be added
 
-  @TC23
+  @TC23_NeedToCheck
   Scenario: Add tests using templates
     Given The user is on the Investigation screen
     When A test template is available and selected
