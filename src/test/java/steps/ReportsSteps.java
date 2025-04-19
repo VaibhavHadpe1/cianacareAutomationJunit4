@@ -78,7 +78,7 @@ public class ReportsSteps {
 
     @Then("The filtered consultation revenue reports should be displayed according to appointment type")
     public void the_filtered_consultation_revenue_reports_should_be_displayed_according_to_appointment_type() throws InterruptedException {
-        reportsPage.verifyReportType("Walkin");
+        reportsPage.verifyReportType("Inclinic");
     }
 
     @When("The user selects a Payment mode filter")
