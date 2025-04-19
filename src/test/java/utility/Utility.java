@@ -62,6 +62,11 @@ public class Utility extends Base
         Utility.explicitlyWait(backButtonInHeader,driver,10);
         backButtonInHeader.click();
     }
+    public static void clickOnBackButtonOfPatientScreeningHeader(){
+        WebElement backButtonInPatientScreeningHeader=driver.findElement(By.xpath("//android.view.ViewGroup[@content-desc=\"\uF110\"]"));
+        Utility.explicitlyWait(backButtonInPatientScreeningHeader,driver,10);
+        backButtonInPatientScreeningHeader.click();
+    }
 
     public static void swipeDown(AndroidDriver driver) {
         PointerInput finger = new PointerInput(PointerInput.Kind.TOUCH, "finger");

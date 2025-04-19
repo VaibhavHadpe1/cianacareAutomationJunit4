@@ -108,7 +108,7 @@ Feature: Patient Screening Flow during Appointment
     When The user adds a custom medicine and from quick type
     Then The medicine should be added successfully
 
-  @TC17//NeedToCheck
+  @TC17
   Scenario: Add medicines using templates
     Given The user is on the Prescribe screen
     When A template is available and displayed
@@ -144,11 +144,11 @@ Feature: Patient Screening Flow during Appointment
     When The user adds a custom test or from quick type
     Then The test should be added
 
-  @TC23_NeedToCheck
+  @TC23
   Scenario: Add tests using templates
     Given The user is on the Investigation screen
-    When A test template is available and selected
-    Then The template tests should be added
+    When A template is available and displayed
+    Then The user should able to apply and Investigation should be added
 
   @TC24
   Scenario: Navigate to Patient Instructions screen from Investigation
@@ -255,29 +255,35 @@ Feature: Patient Screening Flow during Appointment
     Then The user should navigate to Follow-up screen
 
   @TC39
+  Scenario: Add follow-up details
+    Given The user is on the follow up screen
+    When The user enters follow up details
+    Then Follow up details should be saved
+
+  @TC40
   Scenario: Preview prescription PDF
     Given The user is on the Patient Screening page
     When The user clicks on PreviewRx
     Then The PDF should open and display valid information
 
-  @TC40
+  @TC41
   Scenario: End encounter with lab, pharmacy and language
     Given The user is on the Patient Screening page
     When The user click on End encounter
     And The user selects lab, pharmacy, and language and ends encounter
     Then The encounter should be marked as completed
 
-  @TC41
+  @TC42
   Scenario: End encounter with HOPI and prescription only
     Given The user is present on dashboard
     When The user clicks on Appointments
-    And Select the appointments
+    And Select the new appointments
     And The user initiates an appointment
     When The user provides only HOPI and prescription
     And Ends the encounter completely
     Then The encounter should be marked as completed
 
-  @TC42
+  @TC43
   Scenario: End encounter without prescription
     Given The user is present on dashboard
     When The user clicks on Appointments

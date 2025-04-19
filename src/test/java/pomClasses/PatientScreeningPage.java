@@ -21,9 +21,15 @@ import static steps.Base.driver;
 
 public class PatientScreeningPage {
     ServicesPage servicesPage;
+    PersonalInformationPage personalInformationPage;
+    ClinicInformationPage clinicInformationPage;
+    TemplatePage templatePage;
     public PatientScreeningPage(AndroidDriver driver){
         PageFactory.initElements(new AppiumFieldDecorator(driver, Duration.ofSeconds(5)),this);
         servicesPage=new ServicesPage(driver);
+        personalInformationPage=new PersonalInformationPage(driver);
+        clinicInformationPage=new ClinicInformationPage(driver);
+        templatePage=new TemplatePage(driver);
     }
     public static Logger logger= LoggerFactory.getLogger(PatientScreeningPage.class);
     @AndroidFindBy(xpath = "//android.view.ViewGroup[@content-desc=\"Appointments\"]")private WebElement appointmentsFeatureOnDashboard;
@@ -39,6 +45,24 @@ public class PatientScreeningPage {
     @AndroidFindBy(xpath = "//android.widget.TextView[@text=\"History\"]")private WebElement historyButton;
     @AndroidFindBy(xpath = "//android.widget.TextView[@text=\"Templates\"]") private WebElement templateButton;
     @AndroidFindBy(xpath = "//android.widget.TextView[@text=\"No Templates Available\"]") private List<WebElement> noTemplatesAsList;
+    @AndroidFindBy(xpath = "//android.view.ViewGroup[contains(@content-desc,'Social history')]//android.widget.TextView[@text=\"Edit\"]") private WebElement editButtonOfSocialHistory;
+    @AndroidFindBy(xpath = "(//android.widget.ScrollView[@index=4]//android.view.ViewGroup//android.widget.EditText)[1]") private WebElement searchOrAddDoctorFieldOnReferADoctorScreen;
+    @AndroidFindBy(xpath = "(//android.widget.ScrollView[@index=4]//android.view.ViewGroup//android.widget.EditText)[2]") private WebElement specialityFieldOnReferADoctorScreen;
+    @AndroidFindBy(xpath = "(//android.widget.ScrollView[@index=4]//android.view.ViewGroup//android.widget.EditText)[3]") private WebElement addressFieldOnReferADoctorScreen;
+    @AndroidFindBy(xpath = "//android.widget.Button[@content-desc=\"Preview\"]") private WebElement previewButtonPatientScreening;
+    @AndroidFindBy(xpath = "//android.widget.Button[@content-desc=\"Preview Rx\"]") private WebElement previewRxButtonPatientScreening;
+    @AndroidFindBy(xpath = "//android.widget.Button[@content-desc=\"End encounter\"]") private WebElement endEncounterButtonPatientScreening;
+    @AndroidFindBy(xpath = "//android.view.ViewGroup[contains(@content-desc,\"APT\")]//android.view.View[@content-desc=\"Pharmacy\"]") private WebElement pharmacyTabOnEndEncounterPopup;
+    @AndroidFindBy(xpath = "//android.view.ViewGroup[contains(@content-desc,\"APT\")]//android.view.View[@content-desc=\"Lab\"]") private WebElement labTabOnEndEncounterPopup;
+    @AndroidFindBy(xpath = "//android.view.ViewGroup[contains(@content-desc,\"APT\")]//android.view.ViewGroup[contains(@content-desc,\"Whats app\")]") private WebElement whatsAppOptionOnEndEncounterPopup;
+    @AndroidFindBy(xpath = "//android.view.ViewGroup[contains(@content-desc,\"APT\")]//android.view.ViewGroup[contains(@content-desc,\"Email\")]") private WebElement emailOptionOnEndEncounterPopup;
+    @AndroidFindBy(xpath = "//android.view.ViewGroup[contains(@content-desc,\"APT\")]//android.view.ViewGroup[contains(@content-desc,\"English\")]") private WebElement englishOptionOnEndEncounterPopup;
+    @AndroidFindBy(xpath = "//android.view.ViewGroup[contains(@content-desc,\"APT\")]//android.view.ViewGroup[contains(@content-desc,\"Telugu\")]") private WebElement teluguOptionOnEndEncounterPopup;
+    @AndroidFindBy(xpath = "//android.view.ViewGroup[contains(@content-desc,\"APT\")]//android.widget.Button[@content-desc=\"Send\"]")private WebElement sendButtonOnEndEncounterPopup;
+
+
+
+
 
     WebDriverWait wait=new WebDriverWait(driver,Duration.ofSeconds(10));
     public void clickOnAppointmentsFeature(){
@@ -119,7 +143,7 @@ public class PatientScreeningPage {
         WebElement searchInputField=wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//android.view.ViewGroup//android.widget.EditText")));
         searchInputField.clear();
         searchInputField.sendKeys(expectedSearchInput);
-        Thread.sleep(1000);
+        Thread.sleep(2000);
         logger.info("Entered search input");
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//android.widget.TextView[contains(@text,'"+expectedSearchInput+"')]"))).click();
         logger.info("Selected results from searched value");
@@ -152,7 +176,10 @@ public class PatientScreeningPage {
         logger.info("Clicked on clear all button");
     }
     public void removeDataUsingRemoveIcon(String expectedData){
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//android.view.ViewGroup[contains(@content-desc,'"+expectedData+"')]//android.view.ViewGroup//android.widget.ImageView"))).click();
+        //wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//android.view.ViewGroup[contains(@content-desc,'"+expectedData+"')]//android.view.ViewGroup//android.widget.ImageView"))).click();
+        String lowerCaseData = expectedData.toLowerCase();
+        String xpath = "//android.view.ViewGroup[" + "contains(" + "translate(@content-desc, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), '" + lowerCaseData + "')]" + "//android.view.ViewGroup//android.widget.ImageView";
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xpath))).click();
         logger.info("Removed: "+expectedData);
     }
     public void verifyRemovedValuesAreNotDisplayed(List<String> expectedValues) throws InterruptedException {
@@ -222,7 +249,7 @@ public class PatientScreeningPage {
 
     }
     public void scrollToTargetValue(double expectedValue) throws InterruptedException {
-        int maxAttempts = 15; // Prevent infinite loop
+        int maxAttempts = 7; // Prevent infinite loop
         int attempts = 0;
         while (attempts < maxAttempts) {
             Thread.sleep(1000);
@@ -273,8 +300,9 @@ public class PatientScreeningPage {
         logger.info("Clicked on History");
     }
 
-    public void verifyHistoryOrDefaultMessage(String expectedDefaultMessage ) {
-        List<WebElement> defaultMessageAsList=wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.xpath("//android.widget.TextView[@text='"+expectedDefaultMessage+"']")));
+    public void verifyHistoryOrDefaultMessage(String expectedDefaultMessage ) throws InterruptedException {
+        Thread.sleep(1000);
+        List<WebElement> defaultMessageAsList=driver.findElements(By.xpath("//android.widget.TextView[@text='"+expectedDefaultMessage+"']"));
         if(defaultMessageAsList.isEmpty()){
             logger.info("History is available and displayed");
         }
@@ -285,11 +313,12 @@ public class PatientScreeningPage {
             }
         }
     }
-
-    public boolean isTemplateAvailable() throws InterruptedException {
+    public void clickOnTemplatesOptionPatientScreening(){
         Utility.explicitlyWait(templateButton,driver,10);
         templateButton.click();
         logger.info("Clicked on Templates option");
+    }
+    public boolean isTemplateAvailable() throws InterruptedException {
         Thread.sleep(1000);
         if(!noTemplatesAsList.isEmpty()){
             logger.info("Templates not available and Default message is: "+noTemplatesAsList.stream().map(WebElement::getText).collect(Collectors.joining()));
@@ -304,15 +333,33 @@ public class PatientScreeningPage {
     public void applyTemplateAndViewMedicineNames(String expectedTemplateName) throws InterruptedException {
         Thread.sleep(1000);
         if(isTemplateAvailable()){
-            logger.info("Templates are available");
             //Expand the template card
             wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//android.view.ViewGroup[@index=3]//android.widget.ScrollView//android.view.ViewGroup[contains(@content-desc,'"+expectedTemplateName+"')]"))).click();
             logger.info("Template card is expanded");
-            Thread.sleep(1000);
+            Thread.sleep(2000);
             String medicineName=driver.findElement(By.xpath("(//android.widget.ScrollView[@index=0]//android.view.ViewGroup//android.widget.CheckBox/following-sibling::android.widget.TextView)[1]")).getText();
             System.out.println("Medicine Name in Template: "+medicineName);
             clickOnAddToPrescription(expectedTemplateName);
+            Thread.sleep(1000);
             addedValues(Collections.singletonList(medicineName));
+        }
+        else {
+            logger.info("Templates not available and Default message is: "+noTemplatesAsList.stream().map(WebElement::getText).collect(Collectors.joining()));
+            Utility.tapOutsideToCloseBottomSheet(driver,300,150);
+        }
+    }
+    public void applyTemplateAndViewInvestigationNames(String expectedTemplateName) throws InterruptedException {
+        Thread.sleep(1000);
+        if(isTemplateAvailable()){
+            //Expand the template card
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//android.view.ViewGroup[@index=3]//android.widget.ScrollView//android.view.ViewGroup[contains(@content-desc,'"+expectedTemplateName+"')]"))).click();
+            logger.info("Template card is expanded");
+            Thread.sleep(2000);
+            String investigationName=driver.findElement(By.xpath("(//android.widget.TextView[@text='Investigation']/following-sibling::android.widget.TextView)[1]")).getText();
+            System.out.println("Investigation Name in Template: "+investigationName);
+            clickOnAddToPrescription(expectedTemplateName);
+            Thread.sleep(1000);
+            addedValues(Collections.singletonList(investigationName));
         }
         else {
             logger.info("Templates not available and Default message is: "+noTemplatesAsList.stream().map(WebElement::getText).collect(Collectors.joining()));
@@ -321,15 +368,16 @@ public class PatientScreeningPage {
     }
     public void clickOnAddToPrescription(String expectedTemplateName) throws InterruptedException {
         Thread.sleep(1000);
-        driver.findElement(By.xpath("//android.widget.Button[@content-desc=\"Add to prescription\"]")).click();
+        driver.findElement(By.xpath("//android.widget.Button[@content-desc='Add to prescription']")).click();
         logger.info("Clicked on Add to prescription button");
     }
     public void closeBottomSheetInScreening(){
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("(//android.view.ViewGroup[@index=3]//android.view.ViewGroup//android.widget.ImageView)[1]"))).click();
     }
     String medicineNames;
-    public void addMedicineTroughHistory(){
+    public void addMedicineThroughHistory() throws InterruptedException {
         clickOnHistory();
+        Thread.sleep(1000);
         List<WebElement> defaultMessageAsList=driver.findElements(By.xpath("//android.widget.TextView[@text='No History Available']"));
         if(defaultMessageAsList.isEmpty()){
             logger.info("History is available and displayed");
@@ -382,6 +430,406 @@ public class PatientScreeningPage {
             logger.error("Actual and Expected Patient Instructions do not match");
             Assert.fail("Actual and Expected Patient Instructions do not match");
         }
+    }
+    public void clickOnExpectedSectionInOverview(String expectedSection){
+       WebElement overviewsSection=driver.findElement(By.xpath("//android.view.ViewGroup[contains(@content-desc,'"+expectedSection+"')]"));
+       Utility.explicitlyWait(overviewsSection,driver,10);
+       overviewsSection.click();
+        logger.info("Clicked on "+expectedSection);
+    }
+    public void addStartedFromDuration(String expectedDuration, String expectedUnit) throws InterruptedException {
+        personalInformationPage.sendInputToField("Started from *",expectedDuration);
+        clinicInformationPage.selectOptions(Collections.singletonList(expectedUnit));
+    }
+
+    public void addDrugAllergies(String expectedDrugName,String expectedDuration,String expectedUnit) throws InterruptedException {
+        Thread.sleep(1000);
+        clickOnExpectedSectionInOverview("Drug sensitivity");
+        searchAndSelect(expectedDrugName);
+        addStartedFromDuration(expectedDuration,expectedUnit);
+        templatePage.clickOnSaveButtonOfBottomSheet();
+        logger.info("Drug is added to Drug sensitivity section"+expectedDrugName);
+    }
+
+    public void verifyAddedValuesInOverview(String expectedSectionInOverview,List<String>expectedValues) {
+        try{
+            List<WebElement> addedDataInOverview = driver.findElements(By.xpath("//android.view.ViewGroup[contains(@content-desc,'" + expectedSectionInOverview + "')]//android.view.ViewGroup[contains(@content-desc,'Clear ')]/following-sibling::android.view.ViewGroup[contains(@content-desc,' ')]"));
+            if (addedDataInOverview.isEmpty()) {
+                logger.info("No data is added in " + expectedSectionInOverview);
+            } else {
+                List<String> actualAddedValues = new ArrayList<>();
+                for (WebElement value : addedDataInOverview) {
+                    String text = value.getDomAttribute("content-desc").trim();
+                    actualAddedValues.add(text);
+                }
+                System.out.println("List: " + String.join(",", actualAddedValues));
+                for (String expectedValue : expectedValues) {
+                    if (actualAddedValues.stream().noneMatch(actual -> actual.contains(expectedValue))) {
+                        System.out.println("Missing data: " + expectedValue);
+                        Assert.fail("Expected data not found: " + expectedValue);
+                    }
+                }
+                System.out.println("All selected values are added");
+                logger.info("All values are added successfully");
+            }
+        } catch (Exception e) {
+            List<WebElement> addedDataInOverview = driver.findElements(By.xpath("//android.view.ViewGroup[contains(@content-desc,'" + expectedSectionInOverview + "')]//android.view.ViewGroup[contains(@content-desc,'Clear ')]/following-sibling::android.view.ViewGroup[contains(@content-desc,' ')]"));
+            if (addedDataInOverview.isEmpty()) {
+                logger.info("No data is added in " + expectedSectionInOverview);
+            } else {
+                List<String> actualAddedValues = new ArrayList<>();
+                for (WebElement value : addedDataInOverview) {
+                    String text = value.getDomAttribute("content-desc").trim();
+                    actualAddedValues.add(text);
+                }
+                System.out.println("List: " + String.join(",", actualAddedValues));
+                for (String expectedValue : expectedValues) {
+                    if (actualAddedValues.stream().noneMatch(actual -> actual.contains(expectedValue))) {
+                        System.out.println("Missing data: " + expectedValue);
+                        Assert.fail("Expected data not found: " + expectedValue);
+                    }
+                }
+                System.out.println("All selected values are added");
+                logger.info("All values are added successfully");
+            }
+        }
+    }
+
+    public void clickOnClearAllForParticularSectionInOverview(String expectedSectionInOverview) {
+       List<WebElement> clearAllButton=driver.findElements(By.xpath("//android.view.ViewGroup[contains(@content-desc,'"+expectedSectionInOverview+"')]//android.view.ViewGroup[contains(@content-desc,'Clear ')]"));
+       if(clearAllButton.isEmpty()) {
+           logger.info("Clear all button is not available");
+       }
+       else {
+           clearAllButton.get(0).click();
+           logger.info("Clicked on Clear all for "+expectedSectionInOverview);
+       }
+    }
+
+    public void addFoodAllergies(String expectedFoodName, String expectedDuration, String expectedUnit) throws InterruptedException {
+        Thread.sleep(1000);
+        clickOnExpectedSectionInOverview("Food sensitivity");
+        searchAndSelect(expectedFoodName);
+        addStartedFromDuration(expectedDuration,expectedUnit);
+        templatePage.clickOnSaveButtonOfBottomSheet();
+        logger.info("Food is added to Food sensitivity section"+expectedFoodName);
+    }
+
+    public void addEnvironmentAllergies(String expectedEnvironmentName, String expectedDuration, String expectedUnit) throws InterruptedException {
+        Thread.sleep(1000);
+        clickOnExpectedSectionInOverview("Environmental sensitivity");
+        searchAndSelect(expectedEnvironmentName);
+        addStartedFromDuration(expectedDuration,expectedUnit);
+        templatePage.clickOnSaveButtonOfBottomSheet();
+        logger.info("Food is added to Food sensitivity section"+expectedEnvironmentName);
+    }
+    public void removeDataUsingRemoveIconInOverview(String expectedData){
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//android.view.ViewGroup[contains(@content-desc,'"+expectedData+"')]/following-sibling::android.view.ViewGroup//android.widget.ImageView"))).click();
+        logger.info("Removed: "+expectedData);
+    }
+    public void addDuration(String expectedDuration, String expectedUnit) throws InterruptedException {
+        personalInformationPage.sendInputToField("Duration *",expectedDuration);
+        clinicInformationPage.selectOptions(Collections.singletonList(expectedUnit));
+    }
+    public void addProblemList(String expectedMedicalCondition,String expectedDuration,String expectedUnit,String expectedStatus ) throws InterruptedException {
+        Thread.sleep(1000);
+        clickOnExpectedSectionInOverview("Problem list");
+        searchAndSelect(expectedMedicalCondition);
+        addDuration(expectedDuration,expectedUnit);
+        clinicInformationPage.selectOptions(Collections.singletonList(expectedStatus));
+        templatePage.clickOnSaveButtonOfBottomSheet();
+        logger.info("Drug is added to Drug sensitivity section"+expectedMedicalCondition);
+    }
+
+    public void addMedicationInOverview(String expectedMedicine,String expectedDosageRoute,String expectedFrequency,String expectedTiming,String expectedDuration,String expectedUnit) throws InterruptedException {
+        Thread.sleep(1000);
+        clickOnExpectedSectionInOverview("Medications");
+        searchAndSelect(expectedMedicine);
+        clinicInformationPage.selectOptions(Collections.singletonList(expectedDosageRoute));
+        clinicInformationPage.selectOptions(Collections.singletonList(expectedFrequency));
+        Utility.customizeScrollByCoordinates(driver,700,2100,700,1100);
+        clinicInformationPage.selectOptions(Collections.singletonList(expectedTiming));
+        addDuration(expectedDuration,expectedUnit);
+        templatePage.clickOnSaveButtonOfBottomSheet();
+        logger.info("Drug is added to Drug sensitivity section "+expectedMedicine);
+    }
+
+    public void addFamilyHistory(String expectedCondition, String expectedRelation) throws InterruptedException {
+        Thread.sleep(1000);
+        clickOnExpectedSectionInOverview("Family history");
+        personalInformationPage.sendInputToField("Family condition*",expectedCondition);
+        clinicInformationPage.selectOptions(Collections.singletonList(expectedRelation));
+        templatePage.clickOnSaveButtonOfBottomSheet();
+        logger.info("Family History is added ");
+    }
+
+    public void addPastSurgicalHistory(String expectedProcedureDescription, String expectedDuration, String expectedUnit, String expectedOutcome) throws InterruptedException {
+        Thread.sleep(1000);
+        clickOnExpectedSectionInOverview("Past surgical history");
+        searchAndSelect(expectedProcedureDescription);
+        addDuration(expectedDuration,expectedUnit);
+        personalInformationPage.sendInputToField("Outcome*",expectedOutcome);
+        templatePage.clickOnSaveButtonOfBottomSheet();
+        logger.info("Drug is added to Drug sensitivity section "+expectedProcedureDescription);
+    }
+
+    public void addPastMedicalConditions(String expectedProcedureDescription, String expectedDuration, String expectedUnit, String expectedOutcome) throws InterruptedException {
+        Thread.sleep(1000);
+        clickOnExpectedSectionInOverview("Past medical conditions");
+        searchAndSelect(expectedProcedureDescription);
+        addDuration(expectedDuration,expectedUnit);
+        personalInformationPage.sendInputToField("Outcome*",expectedOutcome);
+        templatePage.clickOnSaveButtonOfBottomSheet();
+        logger.info("Drug is added to Drug sensitivity section "+expectedProcedureDescription);
+    }
+    public void clickOnEditButtonOfSocialHistory(){
+        Utility.explicitlyWait(editButtonOfSocialHistory,driver,10);
+        editButtonOfSocialHistory.click();
+        logger.info("Clicked on edit button of social history");
+    }
+    public void selectYesOrNoForQuestion(String expectedQuestion, String expectedAnswer) throws InterruptedException {
+        Thread.sleep(1000);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//android.widget.TextView[@text='"+expectedQuestion+"']/following-sibling::android.view.ViewGroup[@content-desc='Yes' or @content-desc='No'][@content-desc='"+expectedAnswer+"']"))).click();
+        logger.info("Clicked on "+expectedAnswer+" for "+expectedQuestion);
+    }
+    public void addOrUpdateSocialHistory() throws InterruptedException {
+        Thread.sleep(1000);
+        clickOnEditButtonOfSocialHistory();
+        clinicInformationPage.selectOptions(Collections.singletonList("Disturbed"));//Sleep
+        clinicInformationPage.selectOptions(Collections.singletonList("Vegan"));//Diet
+        clinicInformationPage.selectOptions(Collections.singletonList("Occasional"));//Smoking
+        clinicInformationPage.selectOptions(Collections.singletonList("0.5"));
+        Utility.customizeScrollByCoordinates(driver,700,1850,700,800);
+        clinicInformationPage.selectOptions(Collections.singletonList("Regular"));//Alcohol
+        clinicInformationPage.selectOptions(Collections.singletonList("50"));
+        selectYesOrNoForQuestion("Tobacco consumption","No");//Tobacco consumption
+        selectYesOrNoForQuestion("Recreational drugs","No");//Recreational Drugs
+        Utility.customizeScrollByCoordinates(driver,700,1850,700,1000);
+        selectYesOrNoForQuestion("Exercise","Yes");//Exercise
+        clinicInformationPage.selectOptions(Collections.singletonList("Single"));//Martial status
+        Utility.customizeScrollByCoordinates(driver,700,1850,700,800);
+        clinicInformationPage.selectOptions(Arrays.asList("Father","Mother"));//Social Support
+        clinicInformationPage.selectOptions(Collections.singletonList("Doctorate"));//Education status
+        clinicInformationPage.selectOptions(Collections.singletonList("Employed"));//Occupation
+        templatePage.clickOnSaveButtonOfBottomSheet();
+    }
+    public void verifyAddedValuesInSocialOverview(String expectedSectionInOverview,List<String>expectedValues) {
+        try{
+            List<WebElement> addedDataInOverview = driver.findElements(By.xpath("//android.view.ViewGroup[contains(@content-desc,'" + expectedSectionInOverview + "')]//android.widget.TextView[@text='Edit']/following-sibling::android.view.ViewGroup[@content-desc]"));
+            if (addedDataInOverview.isEmpty()) {
+                logger.info("No data is added in " + expectedSectionInOverview);
+            } else {
+                List<String> actualAddedValues = new ArrayList<>();
+                for (WebElement value : addedDataInOverview) {
+                    String text = value.getDomAttribute("content-desc").trim();
+                    actualAddedValues.add(text);
+                }
+                System.out.println("List: " + String.join(",", actualAddedValues));
+                for (String expectedValue : expectedValues) {
+                    if (actualAddedValues.stream().noneMatch(actual -> actual.contains(expectedValue))) {
+                        System.out.println("Missing data: " + expectedValue);
+                        Assert.fail("Expected data not found: " + expectedValue);
+                    }
+                }
+                System.out.println("All selected values are added");
+                logger.info("All values are added successfully");
+            }
+        } catch (Exception e) {
+            List<WebElement> addedDataInOverview = driver.findElements(By.xpath("//android.view.ViewGroup[contains(@content-desc,'" + expectedSectionInOverview + "')]//android.view.ViewGroup[contains(@content-desc,'Clear ')]/following-sibling::android.view.ViewGroup[contains(@content-desc,' ')]"));
+            if (addedDataInOverview.isEmpty()) {
+                logger.info("No data is added in " + expectedSectionInOverview);
+            } else {
+                List<String> actualAddedValues = new ArrayList<>();
+                for (WebElement value : addedDataInOverview) {
+                    String text = value.getDomAttribute("content-desc").trim();
+                    actualAddedValues.add(text);
+                }
+                System.out.println("List: " + String.join(",", actualAddedValues));
+                for (String expectedValue : expectedValues) {
+                    if (actualAddedValues.stream().noneMatch(actual -> actual.contains(expectedValue))) {
+                        System.out.println("Missing data: " + expectedValue);
+                        Assert.fail("Expected data not found: " + expectedValue);
+                    }
+                }
+                System.out.println("All selected values are added");
+                logger.info("All values are added successfully");
+            }
+        }
+    }
+    public void clickOnExpectedAssessment(String expectedAssessment){
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//android.view.ViewGroup[contains(@content-desc,'"+expectedAssessment+"')]"))).click();
+        logger.info("Clicked on "+expectedAssessment+" Assessment");
+    }
+    public void selectExpectedDropdownValue(String expectedDropdown, String expectedDropdownValue){
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//android.widget.TextView[contains(@text,'"+expectedDropdown+"')]/following-sibling::*[1][@content-desc]"))).click();
+        clinicInformationPage.selectOptions(Collections.singletonList(expectedDropdownValue));
+        logger.info("Selected "+expectedDropdownValue+" in "+expectedDropdown);
+    }
+    public void addExtraDetailsInAssessment(String expectedLabelName, String expectedLabelContent) throws InterruptedException {
+        Utility.customizeScrollByCoordinates(driver,700,2050,700,1650);
+        try{
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//android.widget.Button[@content-desc='ADD']"))).click();
+            personalInformationPage.sendInputToField("Label name",expectedLabelName);
+            personalInformationPage.sendInputToField("Label content",expectedLabelContent);
+        } catch (Exception e) {
+            logger.info("Extra details is already added");
+        }
+
+    }
+    public void addNeuroAssessment() throws InterruptedException {
+        clickOnExpectedAssessment("Neuro");
+        selectExpectedDropdownValue("Mental status","Unresponsive");
+        selectExpectedDropdownValue("Pupils","PERLA");
+        selectExpectedDropdownValue("Pupils size(left)","3mm");
+        selectExpectedDropdownValue("Pupils size(right)","2mm");
+        selectExpectedDropdownValue("Affect","Flat");
+        addExtraDetailsInAssessment("NeuroLabelName","NeuroLabelContent");
+        templatePage.clickOnSaveButtonOfBottomSheet();
+        logger.info("Neuro Assessment added");
+    }
+    public void addRespiratoryAssessments() throws InterruptedException {
+        clickOnExpectedAssessment("Respiratory");
+        selectExpectedDropdownValue("Effort","Labored");
+        selectExpectedDropdownValue("Sounds (left) ","Clear");
+        selectExpectedDropdownValue("Sounds (right)","Crackles");
+        selectExpectedDropdownValue("Cough","Moist");
+        addExtraDetailsInAssessment("RespiratoryLabelName","RespiratoryLabelContent");
+        templatePage.clickOnSaveButtonOfBottomSheet();
+        logger.info("Respiratory Assessment added");
+    }
+    public void addCardiovascularAssessments() throws InterruptedException {
+        clickOnExpectedAssessment("Cardiovascular");
+        selectExpectedDropdownValue("Central pulses", "Weak");
+        selectExpectedDropdownValue("Heart sounds", "S1, S2, S3");
+        selectExpectedDropdownValue("Peripheral pulses", "WNL");
+        addExtraDetailsInAssessment("CardiovascularLabelName", "CardiovascularLabelContent");
+        templatePage.clickOnSaveButtonOfBottomSheet();
+        logger.info("Cardiovascular Assessment added");
+    }
+    public void addAbdominalAssessments() throws InterruptedException {
+        clickOnExpectedAssessment("Abdominal");
+        selectExpectedDropdownValue("Abdomen is","Round");
+        selectExpectedDropdownValue("Bowell sounds","Hyperactive");
+        selectExpectedDropdownValue("Quadrants","Bilateral upper");
+        addExtraDetailsInAssessment("AbdominalLabelName","AbdominalLabelContent");
+        templatePage.clickOnSaveButtonOfBottomSheet();
+        logger.info("Abdominal Assessment added");
+    }
+    public void addMusculoskeletalAssessments() throws InterruptedException {
+        clickOnExpectedAssessment("Muscoloskeltal");//Need to correct spelling.
+        selectExpectedDropdownValue("Movement","Full Passive ROM");
+        selectExpectedDropdownValue("Contracture","None");
+        addExtraDetailsInAssessment("MusculoskeletalLabelName","MusculoskeletalLabelContent");
+        templatePage.clickOnSaveButtonOfBottomSheet();
+        logger.info("Musculoskeletal Assessment added");
+    }
+    public void addGlassLowComaScaleAssessments() throws InterruptedException {
+        clickOnExpectedAssessment("Glaslow Coma Scale(GCS SCALE)");
+        selectExpectedDropdownValue("Pts./Eye opening response ","Opens to verbal command, speech, or shout");
+        selectExpectedDropdownValue("Pts verbal response ","Inappropriate response, words discernible");
+        selectExpectedDropdownValue("Pts motor response ","Withdraws from pain");
+        addExtraDetailsInAssessment("GlassLowComaScaleLabelName","GlassLowComaScaleLabelContent");
+        templatePage.clickOnSaveButtonOfBottomSheet();
+        logger.info("GlassLowComaScale Assessment added");
+    }
+    public void addIntegumentaryAssessments() throws InterruptedException {
+        clickOnExpectedAssessment("Integumentary");
+        selectExpectedDropdownValue("Temparature","Cold");//Temperature spelling is wrong.
+        selectExpectedDropdownValue("Moisture","Wet");
+        selectExpectedDropdownValue("Color","Other");
+        selectExpectedDropdownValue("Type of wound","Surgical");
+        addExtraDetailsInAssessment("IntegumentaryLabelName","IntegumentaryLabelContent");
+        templatePage.clickOnSaveButtonOfBottomSheet();
+        logger.info("Integumentary Assessment added");
+    }
+    public void addNeurovascularAssessments() throws InterruptedException {
+        clickOnExpectedAssessment("Neurovascular");
+        selectExpectedDropdownValue("Extremity","Left Upper Extremity");
+        selectExpectedDropdownValue("Pain","3");
+        selectExpectedDropdownValue("Pulses","Weak");
+        selectExpectedDropdownValue("Color","Pale");
+        selectExpectedDropdownValue("Movement","Unable to Move");
+        selectExpectedDropdownValue("Sensation","Absent");
+        selectExpectedDropdownValue("Temperature","Cold");
+        addExtraDetailsInAssessment("NeurovascularLabelName","NeurovascularLabelContent");
+        templatePage.clickOnSaveButtonOfBottomSheet();
+        logger.info("Neurovascular Assessment added");
+    }
+
+    public void addReferDoctorDetails(String expectedDrname,String expectedDrSpeciality,String expectedDrAddress) {
+        Utility.explicitlyWait(searchOrAddDoctorFieldOnReferADoctorScreen,driver,10);
+        searchOrAddDoctorFieldOnReferADoctorScreen.sendKeys(expectedDrname);
+        clinicInformationPage.selectOptions(Collections.singletonList(expectedDrname));
+        Utility.explicitlyWait(specialityFieldOnReferADoctorScreen,driver,10);
+        specialityFieldOnReferADoctorScreen.sendKeys(expectedDrSpeciality);
+        Utility.explicitlyWait(addressFieldOnReferADoctorScreen,driver,10);
+        addressFieldOnReferADoctorScreen.sendKeys(expectedDrAddress);
+        logger.info("Refer Doctor details added");
+    }
+
+    public void verifyReferDoctorDetails(String expectedDrName,String expectedDrSpeciality,String expectedDrAddress) {
+        String actualDrName=searchOrAddDoctorFieldOnReferADoctorScreen.getDomAttribute("text");
+        String actualDrSpeciality=specialityFieldOnReferADoctorScreen.getDomAttribute("text");
+        String actualDrAddress=addressFieldOnReferADoctorScreen.getDomAttribute("text");
+        Assert.assertEquals(actualDrName,expectedDrName,"Refer Doctor Name is not matching");
+        Assert.assertEquals(actualDrSpeciality,expectedDrSpeciality,"Refer Doctor Speciality is not matching");
+        Assert.assertEquals(actualDrAddress,expectedDrAddress,"Refer Doctor Address is not matching");
+        logger.info("Refer Doctor details verified");
+    }
+
+    public void addFollowUpDetails(String expectedTime,String expectedTimeUnit) {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//android.widget.EditText"))).sendKeys(expectedTime);
+        clinicInformationPage.selectOptions(Collections.singletonList(expectedTimeUnit));
+    }
+
+    public void verifyFollowUpDetails(String expectedFollowUpTime) {
+        String actualTime=wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//android.widget.EditText"))).getDomAttribute("text");
+        Assert.assertEquals(actualTime,expectedFollowUpTime,"Follow Up Time is not matching");
+        logger.info("Follow Up details verified");
+    }
+    public void clickOnPreview() throws InterruptedException {
+        Utility.explicitlyWait(previewButtonPatientScreening,driver,5);
+        previewButtonPatientScreening.click();
+        servicesPage.verifyUserIsPresentOnExpectedScreen("Patient Screening");
+        logger.info("Clicked on Preview and user navigates to Patient Screening main page");
+    }
+    public void clickOnPreviewRx(){
+        Utility.explicitlyWait(previewRxButtonPatientScreening,driver,5);
+        previewRxButtonPatientScreening.click();
+        logger.info("Clicked on Preview Rx button");
+    }
+    public void clickOnEndEncounterButton(){
+        Utility.explicitlyWait(endEncounterButtonPatientScreening,driver,5);
+        endEncounterButtonPatientScreening.click();
+        logger.info("Clicked on End Encounter button");
+    }
+    public void selectPharmacyTabOnEndEncounterPopup(){
+        Utility.explicitlyWait(pharmacyTabOnEndEncounterPopup,driver,10);
+        pharmacyTabOnEndEncounterPopup.click();
+    }
+    public void selectLabTabOnEndEncounterPopup(){
+        Utility.explicitlyWait(labTabOnEndEncounterPopup,driver,10);
+        labTabOnEndEncounterPopup.click();
+    }
+    public void selectWhatsAppOptionOnEndEncounterPopup(){
+        Utility.explicitlyWait(whatsAppOptionOnEndEncounterPopup,driver,10);
+        whatsAppOptionOnEndEncounterPopup.click();
+    }
+    public void selectEmailOptionOnEndEncounterPopup(){
+        Utility.explicitlyWait(emailOptionOnEndEncounterPopup,driver,10);
+        emailOptionOnEndEncounterPopup.click();
+    }
+    public void clickOnSendButtonOnEndEncounterPopup(){
+        Utility.explicitlyWait(sendButtonOnEndEncounterPopup,driver,10);
+        sendButtonOnEndEncounterPopup.click();
+    }
+    public void selectCheckBoxForExpectedPharmacyOrLab(String expectedPharmacyOrLab){
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//android.widget.TextView[contains(@text,'"+expectedPharmacyOrLab+"')]/preceding-sibling::android.widget.CheckBox"))).click();
+        logger.info("Selected the "+expectedPharmacyOrLab);
+    }
+    public void selectLanguageOptionOnEndEncounterPopup(String expectedLanguage){
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//android.view.ViewGroup[contains(@content-desc,\"APT\")]//android.view.ViewGroup[contains(@content-desc,'"+expectedLanguage+"')]"))).click();
+        logger.info("Language selected: "+expectedLanguage);
     }
 
 }
