@@ -50,7 +50,7 @@ public class BookAppointmentPage {
     @AndroidFindBy(xpath = "//android.widget.TextView[@text=\"Select doctor *\"]/following-sibling::android.view.ViewGroup[@content-desc][1]")private WebElement doctorDropdown;
     @AndroidFindBy(xpath = "//android.widget.TextView[@text=\"Symptoms \"]/following-sibling::android.view.ViewGroup[@content-desc][1]")private WebElement symptomsDropdown;
     @AndroidFindBy(xpath = "//android.widget.TextView[@text=\"Appointment date *\"]/following-sibling::android.view.ViewGroup[@content-desc][1]")private WebElement appointmentDatePicker;
-    @AndroidFindBy(xpath = "//android.widget.Button[@resource-id=\"android:id/button1\"]")private WebElement okButtonOnDatePicker;
+    @AndroidFindBy(xpath = "")
 
     public void clickOnBookButton() {
         Utility.explicitlyWait(bookButton,driver,10);
@@ -254,11 +254,10 @@ public class BookAppointmentPage {
         Thread.sleep(1000);
         Utility.customizeScrollByCoordinates(driver,521,1299,521,1050);
         Thread.sleep(1000);
-        clickOnOkOfDatePicker();
+
     }
     public void clickOnOkOfDatePicker() throws InterruptedException {
         Thread.sleep(1000);
-        okButtonOnDatePicker.click();
-        logger.info("Clicked on ok button of date picker");
+
     }
 }

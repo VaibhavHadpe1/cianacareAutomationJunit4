@@ -22,7 +22,8 @@ public class Base
                 .setAutoGrantPermissions(true)
                 .setNoReset(true)
                 .setAppPackage("com.aciana.docisnplus")
-                .setAppActivity("com.aciana.docisnplus.MainActivity");
+                .setAppActivity("com.aciana.docisnplus.MainActivity")
+                .setCapability("enforceXPath1", true);
         try
         {
             driver = new AndroidDriver(new URL("http://127.0.0.1:4723/"), options);

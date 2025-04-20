@@ -10,6 +10,7 @@ import pomClasses.*;
 import utility.Utility;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
 
 import static steps.Base.driver;
@@ -185,6 +186,7 @@ public class BookAppointmentSteps {
 
     @When("Selects a time slot")
     public void selects_a_time_slot() throws InterruptedException {
+        Thread.sleep(1000);
         Utility.customizeScrollByCoordinates(driver,500,1800,500,1400);
         bookAppointmentPage.clickOnAppointmentTimeField();
         bookAppointmentPage.selectTimeSlot();
@@ -208,29 +210,32 @@ public class BookAppointmentSteps {
 
     }
 
-    @When("Enters all required details")
-    public void enters_all_required_details() {
-
+    @When("Click on Bill patient and adds services")
+    public void click_on_bill_patient_and_adds_services() {
+        bookAppointmentPage.clickOnBillPatientButton();
+        bookAppointmentPage.addExistingService();
+        bookAppointmentPage.addUserDefinedService("Test Service", "1000", "10");
     }
 
-    @When("Adds multiple services")
-    public void adds_multiple_services() {
-
+    @When("Edits the services and calculates the final amount to be paid")
+    public void edits_the_services_and_calculates_the_final_amount_to_be_paid() {
+        bookAppointmentPage.editServices("Test Service", "50");
+        bookAppointmentPage.calculateFinalAmountToBePaid();
     }
 
-    @When("Edits the services")
-    public void edits_the_services() {
-
+    @When("Pay the amount")
+    public void pay_the_amount() throws InterruptedException {
+        bookAppointmentPage.slideToPayAmount();
     }
-
     @Then("Appointment should be booked with updated services")
     public void appointment_should_be_booked_with_updated_services() {
-
+        bookAppointmentPage.verifySuccessFullAppointmentBooking();
+        bookAppointmentPage.clickOnOkButtonForSuccessMessage();
     }
 
     @When("Selects a doctor from the doctor dropdown")
-    public void selects_a_doctor_from_the_doctor_dropdown() {
-
+    public void selects_a_doctor_from_the_doctor_dropdown() throws InterruptedException {
+        bookAppointmentPage.selectDoctorFromDropdown("Sarita Jain");
     }
 
     @When("Enters all required patient details")
@@ -240,27 +245,34 @@ public class BookAppointmentSteps {
 
     @Then("Appointment should be booked with selected doctor")
     public void appointment_should_be_booked_with_selected_doctor() {
-
+        bookAppointmentPage.verifySuccessFullAppointmentBooking();
+        bookAppointmentPage.clickOnOkButtonForSuccessMessage();
     }
 
     @When("Selects symptoms from dropdown")
-    public void selects_symptoms_from_dropdown() {
-
+    public void selects_symptoms_from_dropdown() throws InterruptedException {
+        bookAppointmentPage.clickOnSymptomDropdown();
+        bookAppointmentPage.addSymptomsWhileBookingAppointment("Fever");
+        bookAppointmentPage.addSymptomsWhileBookingAppointment("Headache");
     }
 
     @When("Enters custom symptoms")
-    public void enters_custom_symptoms() {
-
+    public void enters_custom_symptoms() throws InterruptedException {
+        //bookAppointmentPage.addSymptomsWhileBookingAppointment("Custom Symptom");//bug raised
+        Utility.tapOutsideToCloseBottomSheet(driver,908,852);
+        bookAppointmentPage.verifySymptomsAdded(Arrays.asList("Fever","Headache"));
     }
 
-    @When("Fills in all required patient details")
-    public void fills_in_all_required_patient_details() {
-
+    @When("Selects a future date")
+    public void selects_a_future_date() throws InterruptedException {
+        bookAppointmentPage.selectFutureDateWhileBookingAppointment();
+        Thread.sleep(1000);
     }
 
     @Then("Appointment should be booked with symptoms")
     public void appointment_should_be_booked_with_symptoms() {
-
+        bookAppointmentPage.verifySuccessFullAppointmentBooking();
+        bookAppointmentPage.clickOnOkButtonForSuccessMessage();
     }
 
 }
