@@ -22,6 +22,7 @@ public class BookAppointmentSteps {
     ServicesPage servicesPage;
     ClinicInformationPage clinicInformationPage;
     BookAppointmentPage bookAppointmentPage;
+    TemplatePage templatePage;
     public BookAppointmentSteps(){
         driver= Utility.getDriver();
         servicesPage=new ServicesPage(driver);
@@ -29,6 +30,7 @@ public class BookAppointmentSteps {
         bookAppointmentPage=new BookAppointmentPage(driver);
         personalInformationPage=new PersonalInformationPage(driver);
         loginPage=new LoginPage(driver);
+        templatePage=new TemplatePage(driver);
     }
     @When("User clicks on Book button")
     public void user_clicks_on_book_button() {
@@ -38,6 +40,7 @@ public class BookAppointmentSteps {
     @Then("User should be navigated to Book Appointment screen")
     public void user_should_be_navigated_to_book_appointment_screen() throws InterruptedException {
         servicesPage.verifyUserIsPresentOnExpectedScreen("Book Appointment");
+        Utility.clickOnBackButtonOfScreenHeader();
     }
 
     @Given("User navigated and present on Book Appointment screen")
@@ -52,7 +55,7 @@ public class BookAppointmentSteps {
     }
 
     @When("Clicks on Bill patient button without entering any data")
-    public void clicks_on_bill_patient_button_without_entering_any_data() {
+    public void clicks_on_bill_patient_button_without_entering_any_data() throws InterruptedException {
         bookAppointmentPage.clickOnBillPatientButton();
     }
 
@@ -84,7 +87,7 @@ public class BookAppointmentSteps {
     }
 
     @When("Clicks on Bill later")
-    public void clicks_on_bill_later() {
+    public void clicks_on_bill_later() throws InterruptedException {
         bookAppointmentPage.clickOnBillLaterButton();
     }
 
@@ -189,7 +192,8 @@ public class BookAppointmentSteps {
         Thread.sleep(1000);
         Utility.customizeScrollByCoordinates(driver,500,1800,500,1400);
         bookAppointmentPage.clickOnAppointmentTimeField();
-        bookAppointmentPage.selectTimeSlot();
+        //bookAppointmentPage.selectTimeSlot();
+        bookAppointmentPage.selectAptTime();
     }
 
     @Then("Appointment should be scheduled successfully")
@@ -211,7 +215,7 @@ public class BookAppointmentSteps {
     }
 
     @When("Click on Bill patient and adds services")
-    public void click_on_bill_patient_and_adds_services() {
+    public void click_on_bill_patient_and_adds_services() throws InterruptedException {
         bookAppointmentPage.clickOnBillPatientButton();
         bookAppointmentPage.addExistingService();
         bookAppointmentPage.addUserDefinedService("Test Service", "1000", "10");

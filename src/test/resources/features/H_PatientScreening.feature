@@ -1,5 +1,5 @@
-#@run
-  @Ignore
+@run
+#@Ignore
 Feature: Patient Screening Flow during Appointment
 
   @TC1
@@ -287,7 +287,7 @@ Feature: Patient Screening Flow during Appointment
   Scenario: End encounter without prescription
     Given The user is present on dashboard
     When The user clicks on Appointments
-    And Select the appointments
+    And Select the another appointment
     And The user initiates an appointment
     When The user fills details but skips prescription
     And Ends the encounter completely
