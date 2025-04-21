@@ -36,11 +36,15 @@ public class PatientScreeningSteps {
 
     @And("Select the appointments")
     public void Select_the_appointments() throws InterruptedException {
-        patientScreeningPage.selectAppointment("02:00 PM");
+        patientScreeningPage.selectAppointment("09:30 AM");
     }
     @And("Select the new appointments")
     public void Select_the_new_appointments() throws InterruptedException {
-        patientScreeningPage.selectAppointment("02:00 PM");
+        patientScreeningPage.selectAppointment("09:45 AM");
+    }
+    @And("Select the another appointment")
+    public void Select_the_another_appointment() throws InterruptedException {
+        patientScreeningPage.selectAppointment("10:00 AM");
     }
 
     @And("The user initiates an appointment")

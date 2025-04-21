@@ -51,6 +51,8 @@ public class BookAppointmentPage {
     @AndroidFindBy(xpath = "//android.widget.TextView[@text=\"Symptoms \"]/following-sibling::android.view.ViewGroup[@content-desc][1]")private WebElement symptomsDropdown;
     @AndroidFindBy(xpath = "//android.widget.TextView[@text=\"Appointment date *\"]/following-sibling::android.view.ViewGroup[@content-desc][1]")private WebElement appointmentDatePicker;
     @AndroidFindBy(xpath = "//android.widget.Button[@resource-id=\"android:id/button1\"]")private WebElement okButtonOnDatePicker;
+    @AndroidFindBy(xpath = "//android.widget.TextView[@text=\"Afternoon\"]") private WebElement afternoonSection;
+    @AndroidFindBy(xpath = "//android.widget.TextView[@text=\"Evening\"]") private WebElement eveningSection;
 
     public void clickOnBookButton() {
         Utility.explicitlyWait(bookButton,driver,10);
@@ -69,15 +71,38 @@ public class BookAppointmentPage {
         logger.info("Selected schedule appointment option");
     }
 
-    public void clickOnBillPatientButton() {
+    public void clickOnBillPatientButton() throws InterruptedException {
         Utility.explicitlyWait(billPatientButton,driver,10);
         billPatientButton.click();
         logger.info("Clicked on bill patient button");
+        List<WebElement> selDiffSlotMsg = driver.findElements(By.xpath("//android.widget.TextView[contains(@text,'Patient has an appointment with another doctor on this same date and time, please select different slot')]"));
+        if(!selDiffSlotMsg.isEmpty()){
+            okButtonForSuccessMessage.click();
+            Thread.sleep(1000);
+            clickOnAppointmentTimeField();
+            Thread.sleep(1000);
+            List<WebElement> timeSlots = driver.findElements(By.xpath("(//android.widget.ScrollView[@index=3]//android.view.ViewGroup//android.view.ViewGroup[contains(@content-desc,':')])"));
+            timeSlots.get(timeSlots.size() - 1).click();
+            Thread.sleep(1000);
+            billPatientButton.click();
+        }
+
     }
-    public void clickOnBillLaterButton() {
+    public void clickOnBillLaterButton() throws InterruptedException {
         Utility.explicitlyWait(bilLaterButton,driver,10);
         bilLaterButton.click();
         logger.info("Clicked on bill later button");
+        List<WebElement> selDiffSlotMsg = driver.findElements(By.xpath("//android.widget.TextView[contains(@text,'Patient has an appointment with another doctor on this same date and time, please select different slot')]"));
+        if(!selDiffSlotMsg.isEmpty()){
+            okButtonForSuccessMessage.click();
+            Thread.sleep(1000);
+            clickOnAppointmentTimeField();
+            Thread.sleep(1000);
+            List<WebElement> timeSlots = driver.findElements(By.xpath("(//android.widget.ScrollView[@index=3]//android.view.ViewGroup//android.view.ViewGroup[contains(@content-desc,':')])"));
+            timeSlots.get(timeSlots.size() - 1).click();
+            Thread.sleep(1000);
+            clickOnBillLaterButton();
+        }
     }
     public void verifyErrorMessagesOnBookAppointmentScreen() {
         List<String> expectedErrors = Arrays.asList(
@@ -134,6 +159,36 @@ public class BookAppointmentPage {
         driver.findElements(By.xpath("//android.view.ViewGroup[contains(@content-desc,\":\")]")).get(0).click();
         logger.info("Time slot is selected");
     }
+    public void selectAptTime() throws InterruptedException {
+        List<WebElement> timeSlots = driver.findElements(By.xpath("(//android.widget.ScrollView[@index=3]//android.view.ViewGroup//android.view.ViewGroup[contains(@content-desc,':')])"));
+        if (!timeSlots.isEmpty()) {
+            timeSlots.get(0).click();  // Click first available slot
+            //System.out.println("Selected time slot in Morning: " + timeSlots.get(0).getText());
+        } else {
+            afternoonSection.click();
+            Thread.sleep(1000);  // Wait for UI to update
+            // Re-fetch time slots after clicking Afternoon
+            timeSlots = driver.findElements(By.xpath("(//android.widget.ScrollView[@index=3]//android.view.ViewGroup//android.view.ViewGroup[contains(@content-desc,':')])"));
+            if (!timeSlots.isEmpty()) {
+                timeSlots.get(0).click();
+                //System.out.println("Selected time slot in Afternoon: " + timeSlots.get(0).getText());
+            } else {
+                // Switch to Evening
+                eveningSection.click();
+                Thread.sleep(1000);  // Wait for UI to update
+                // Re-fetch time slots after clicking Evening
+                timeSlots = driver.findElements(By.xpath("(//android.widget.ScrollView[@index=3]//android.view.ViewGroup//android.view.ViewGroup[contains(@content-desc,':')])"));
+                if (!timeSlots.isEmpty()) {
+                    timeSlots.get(0).click();
+                    //System.out.println("Selected time slot in Evening: " + timeSlots.get(0).getText());
+                } else {
+                    throw new RuntimeException("No time slots available for booking.");
+                }
+            }
+        }
+        Thread.sleep(1000);
+    }
+
 
     public void selectAddNewMemberOptionFromPatientList() throws InterruptedException {
         Thread.sleep(2000);
