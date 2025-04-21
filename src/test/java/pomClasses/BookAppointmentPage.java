@@ -75,7 +75,12 @@ public class BookAppointmentPage {
         Utility.explicitlyWait(billPatientButton,driver,10);
         billPatientButton.click();
         logger.info("Clicked on bill patient button");
-        List<WebElement> selDiffSlotMsg = driver.findElements(By.xpath("//android.widget.TextView[contains(@text,'Patient has an appointment with another doctor on this same date and time, please select different slot')]"));
+        Thread.sleep(1000);
+        List<WebElement> selDiffSlotMsg = driver.findElements(By.xpath("//android.widget.TextView[" +
+                "    contains(@text, 'Doctor is Not Available on selected Date') or " +
+                "    contains(@text, 'Selected slot is already booked by another user') or" +
+                "    contains(@text, 'Patient has an appointment with another Doctor')" +
+                "]"));
         if(!selDiffSlotMsg.isEmpty()){
             okButtonForSuccessMessage.click();
             Thread.sleep(1000);
@@ -92,7 +97,13 @@ public class BookAppointmentPage {
         Utility.explicitlyWait(bilLaterButton,driver,10);
         bilLaterButton.click();
         logger.info("Clicked on bill later button");
-        List<WebElement> selDiffSlotMsg = driver.findElements(By.xpath("//android.widget.TextView[contains(@text,'Patient has an appointment with another doctor on this same date and time, please select different slot')]"));
+        Thread.sleep(1000);
+        List<WebElement> selDiffSlotMsg = driver.findElements(By.xpath("//android.widget.TextView[" +
+                "    contains(@text, 'Doctor is Not Available on selected Date') or " +
+                "    contains(@text, 'Selected slot is already booked by another user') or" +
+                "    contains(@text, 'Patient has an appointment with another Doctor')" +
+                "]"));
+        //android.widget.Button[@content-desc="OK"]//android.widget.TextView[contains(@text,'Patient has an appointment with another doctor on this same date and time, please select different slot')]
         if(!selDiffSlotMsg.isEmpty()){
             okButtonForSuccessMessage.click();
             Thread.sleep(1000);

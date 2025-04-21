@@ -23,6 +23,7 @@ public class BookAppointmentSteps {
     ClinicInformationPage clinicInformationPage;
     BookAppointmentPage bookAppointmentPage;
     TemplatePage templatePage;
+    UserListPage userListPage;
     public BookAppointmentSteps(){
         driver= Utility.getDriver();
         servicesPage=new ServicesPage(driver);
@@ -31,6 +32,13 @@ public class BookAppointmentSteps {
         personalInformationPage=new PersonalInformationPage(driver);
         loginPage=new LoginPage(driver);
         templatePage=new TemplatePage(driver);
+        userListPage=new UserListPage(driver);
+    }
+    @Given("The user is logged in as staff and present on dashboard")
+    public void the_user_is_logged_in_as_doctor_and_present_on_dashboard() throws IOException, InterruptedException {
+        //For Testing use 7878781111 staff credential and Sunshine hospital branch-2
+        //userListPage.loginToUserAccount(Utility.readDataFromPropertyFile("staffRegistrationMobileNumber"),Utility.readDataFromPropertyFile("registrationClinicName"));
+        loginPage.verifyUserIsOnDashboard();
     }
     @When("User clicks on Book button")
     public void user_clicks_on_book_button() {
@@ -174,12 +182,56 @@ public class BookAppointmentSteps {
     public void enters_new_mobile_number_six() throws IOException, InterruptedException {
         personalInformationPage.sendInputToField("Mobile number*",Utility.readDataFromPropertyFile("unregisteredPatientMobileNumber6"));
     }
+    @When("Enters new mobile number seven")
+    public void enters_new_mobile_number_seven() throws IOException, InterruptedException {
+        personalInformationPage.sendInputToField("Mobile number*",Utility.readDataFromPropertyFile("unregisteredPatientMobileNumber7"));
+    }
 
-    @When("Enters patient name, gender, and DOB six")
-    public void enters_patient_name_gender_and_dob_six() throws InterruptedException, IOException {
-        personalInformationPage.sendInputToField("Patient name*",Utility.readDataFromPropertyFile("unregisteredPatientName6"));
-        clinicInformationPage.selectOptions(Collections.singletonList(Utility.readDataFromPropertyFile("unregisteredPatientGender6")));
-        personalInformationPage.sendInputToField("Age*",Utility.readDataFromPropertyFile("unregisteredPatientAge6"));
+    @When("Enters patient name, gender, and DOB seven")
+    public void enters_patient_name_gender_and_dob_seven() throws InterruptedException, IOException {
+        personalInformationPage.sendInputToField("Patient name*",Utility.readDataFromPropertyFile("unregisteredPatientName7"));
+        clinicInformationPage.selectOptions(Collections.singletonList(Utility.readDataFromPropertyFile("unregisteredPatientGender7")));
+        personalInformationPage.sendInputToField("Age*",Utility.readDataFromPropertyFile("unregisteredPatientAge7"));
+    }
+    @When("Enters new mobile number eight")
+    public void enters_new_mobile_number_eight() throws IOException, InterruptedException {
+        personalInformationPage.sendInputToField("Mobile number*",Utility.readDataFromPropertyFile("unregisteredPatientMobileNumber8"));
+    }
+
+    @When("Enters patient name, gender, and DOB eight")
+    public void enters_patient_name_gender_and_dob_eight() throws InterruptedException, IOException {
+        personalInformationPage.sendInputToField("Patient name*",Utility.readDataFromPropertyFile("unregisteredPatientName8"));
+        clinicInformationPage.selectOptions(Collections.singletonList(Utility.readDataFromPropertyFile("unregisteredPatientGender8")));
+        personalInformationPage.sendInputToField("Age*",Utility.readDataFromPropertyFile("unregisteredPatientAge8"));
+    }
+    @When("Enters new mobile number nine")
+    public void enters_new_mobile_number_nine() throws IOException, InterruptedException {
+        personalInformationPage.sendInputToField("Mobile number*",Utility.readDataFromPropertyFile("unregisteredPatientMobileNumber9"));
+    }
+
+    @When("Enters patient name, gender, and DOB nine")
+    public void enters_patient_name_gender_and_dob_nine() throws InterruptedException, IOException {
+        personalInformationPage.sendInputToField("Patient name*",Utility.readDataFromPropertyFile("unregisteredPatientName9"));
+        clinicInformationPage.selectOptions(Collections.singletonList(Utility.readDataFromPropertyFile("unregisteredPatientGender9")));
+        personalInformationPage.sendInputToField("Age*",Utility.readDataFromPropertyFile("unregisteredPatientAge9"));
+    }
+    @When("Enters new mobile number ten")
+    public void enters_new_mobile_number_ten() throws IOException, InterruptedException {
+        personalInformationPage.sendInputToField("Mobile number*",Utility.readDataFromPropertyFile("unregisteredPatientMobileNumber10"));
+    }
+
+    @When("Enters patient name, gender, and DOB ten")
+    public void enters_patient_name_gender_and_dob_ten() throws InterruptedException, IOException {
+        personalInformationPage.sendInputToField("Patient name*",Utility.readDataFromPropertyFile("unregisteredPatientName10"));
+        clinicInformationPage.selectOptions(Collections.singletonList(Utility.readDataFromPropertyFile("unregisteredPatientGender10")));
+        personalInformationPage.sendInputToField("Age*",Utility.readDataFromPropertyFile("unregisteredPatientAge10"));
+    }
+
+    @When("Enters patient name, gender, and DOB eleven")
+    public void enters_patient_name_gender_and_dob_eleven() throws InterruptedException, IOException {
+        personalInformationPage.sendInputToField("Patient name*",Utility.readDataFromPropertyFile("unregisteredPatientName11"));
+        clinicInformationPage.selectOptions(Collections.singletonList(Utility.readDataFromPropertyFile("unregisteredPatientGender11")));
+        personalInformationPage.sendInputToField("Age*",Utility.readDataFromPropertyFile("unregisteredPatientAge11"));
     }
 
     @When("User selects Schedule appointment")
